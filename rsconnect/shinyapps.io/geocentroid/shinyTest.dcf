@@ -1,0 +1,14 @@
+name: shinyTest
+title: shinyTest
+username:
+account: geocentroid
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 5475280
+bundleId: 5953233
+url: https://geocentroid.shinyapps.io/shinyTest/
+when: 1653686617.17645
+lastSyncTime: 1653686617.17645
+asMultiple: FALSE
+asStatic: FALSE
+ignoredFiles: testArea.R

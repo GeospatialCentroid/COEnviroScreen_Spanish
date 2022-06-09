@@ -1,0 +1,186 @@
+p {
+  padding-left:50px;
+  padding-right:50px;
+  text-align:left;
+  font-size: 16px;
+}
+
+
+h1, h2, h3, h4, h5, h6
+{
+  padding: 20px 50px;
+  text-align: left;
+}
+
+ol, ul, dl {
+    margin-top: 0;
+    margin-bottom: 1rem;
+    text-align:left;
+    padding-left:100px;
+    padding-right:50px;
+}
+
+
+shiny-text-output shiny-bound-output{
+  padding: 10px 20px;
+}
+
+.main-header {
+  text-align: center;
+}
+
+
+.optgroup-header{
+  font-weight: 600;
+  background-color: coral;
+  text-size-adjust: 1.5;
+}
+
+/*page buttons on table */
+.page-link{
+  background-color: #235c37 !important;
+}
+
+/* active page button on table*/ 
+.page-item.active .page-link{
+  background-color: #739849;
+}
+
+
+/* text color for hyperlink blue */
+a{
+  color: #0000FF;
+  text-decoration: underline;
+}
+
+/* stlying for all tabset panels */
+a.nav-link{
+  color: #FFFFFF; 
+  background-color: #739849;
+  font-size: 18px;
+  border-color: #3f5657 !important;
+  border-width: 1px;
+}
+
+/* stlying for selected tab */
+//.nav-tabs .nav-link.active, .nav-tabs>li>a.active,{
+//This change in element ID fixed the tabset color issue when running on different machines
+.nav-tabs>li.active>a{
+    background-color: #5f7774 !important;
+    color: #FFFFFF !important;
+}
+
+/* Positing for all tabs */
+.nav-tabs{
+  display: flex !important;
+  justify-content: center !important;
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+
+
+/*main banner elements*/ 
+div.row.titleElement{
+  background:#6d3a5d;
+  color: #FFFFFF;
+  display: flex;
+  align-items: center;
+}
+
+/*section header elements*/ 
+div.row.sectionTitle{
+  background:#235c37;
+  color: #FFFFFF;
+  margin: 10px;
+}
+  
+
+/* Make map buttons yellow*/
+a.search-button,a.leaflet-control-layers-toggle{
+  background-color: #ffcd00 !important;
+}
+
+/* Make selection labels bold*/
+label.control-label {
+        font-size: 20px;
+        font-weight: bold;
+}
+
+
+/* Highlight group selection headers in indicator drop down*/
+.selectize-dropdown .optgroup-header{
+  color: #000000 !important;
+  background-color: #95a5a6 !important;
+}
+
+
+/*style all buttons */
+.btn{
+  background-color: #bc6123 !important;
+}
+/*style individula buttons*/
+#updateMap, #button_remove {
+    margin: 30px 30px !important;
+}
+#removeHighlight {
+  margin: 25px 30px !important;
+}
+#downloadData, #downloadData2, #button_table{
+  margin: 5px 10px !important;
+}
+
+/* sytle supporting text*/
+div.tab-content{
+  margin: 10px 50px
+}
+
+
+/*style for data table*/ 
+div.row.dataTableArea{
+  margin: 0px 20px;
+}
+
+
+/* style select tabs for table */
+
+button.btn.radiobtn.btn-default.active{
+  background-color: #5f7774 !important;
+  border-top-left-radius: 10px !important;
+  border-top-right-radius: 10px!important;
+  border-color: #3f5657 !important;
+}
+
+button.btn.radiobtn.btn-default{
+  background-color: #739849 !important;
+  border-top-left-radius: 10px !important;
+  border-top-right-radius: 10px!important;
+  border-color: #3f5657 !important;
+
+}
+
+/*style for map image*/
+img#mapDesc{
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 70%;
+}
+
+/*banner for link features*/ 
+p#links2{
+  background-color: #ffcd00;
+  font-size: 18px !important;
+  text-align: center !important;
+  margin: 10px, 50px !important;
+  color: #FFFFFF;
+  
+}
+
+/*images*/
+img{
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
