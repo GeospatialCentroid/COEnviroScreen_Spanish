@@ -361,7 +361,13 @@ ui <- fluidPage(
     tags$a(href = "https://drive.google.com/file/d/17rQ90fNt3DF-0PbySpGjo2tiy9AmDiCc/view?usp=sharing",
            tags$span(style="color:white","Spanish"), target = "_blank"),
     ")."
-                      ), ),
+                      ),
+                    p(class = "href2",
+                      "El código y repositorios de los datos están disponibles aquí ",
+                      tags$a(href= "https://geospatialcentroid.github.io/Colorado_EnviroScreen/",
+                             tags$span(style="color:white","aquí"), target = "_blank")
+                    )
+    ),
     
     column(4,tags$a(
       href = "https://cdphe.colorado.gov/enviroscreen",
