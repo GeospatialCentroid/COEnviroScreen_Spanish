@@ -3,8 +3,8 @@ options(rsconnect.locale.cache = FALSE,
 
 rsconnect::deployApp(  
                      appFiles = "app.R",
-                     account = "geocentroid", 
+                     account = "teeo-cdphe", 
                      server = "shinyapps.io",     
-                     appName = "EnviroScreen_Shiny_Spanish")
+                     appName = "COEnviroScreen_Spanish")
 
 
