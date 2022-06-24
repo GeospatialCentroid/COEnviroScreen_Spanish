@@ -574,7 +574,7 @@ use10 <- function(){
                       br(),
                       p(
                         tags$a(
-                          href = "https://docs.google.com/document/d/1_GEjGbOd3CmXwZu09QJ9oO4ZI8hqXtFwZAAeTsNV5lQ/edit?usp=sharing"
+                          href = "https://docs.google.com/document/d/1tPOWcrS2IClFCyW4-ZE8Lmd2PV_CRGDR4s6qC7A7XPQ/edit?usp=sharing"
                           ,tags$em("Guías para los usuarios")
                           , target = "_blank"
                         )

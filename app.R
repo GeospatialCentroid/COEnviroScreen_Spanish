@@ -13,57 +13,62 @@ library(leaflegend)
 library(shinyBS)
 library(shinyWidgets)
 
+
+
+
 # source helpers ----------------------------------------------------------
 lapply(list.files(path = "src",recursive = TRUE, full.names = TRUE), source)
 
 # enviroscreen data
 envoData <- readRDS("data/scores/allScores_4_spanish.rds")%>%
   dplyr::mutate(visParam = `Percentil del puntaje de Colorado EnviroScreen`)%>%
-  dplyr::select("Nombre del condado", "GEOID", everything())%>% 
+  dplyr::select("Nombre del condado", "GEOID", everything())%>%
   dplyr::select(-"GEOID3")
 
 
-# Additional Data   
-oil <- readRDS("data/scores/oilgasVis.rds") 
+# Additional Data
+oil <- readRDS("data/scores/oilgasVis.rds")
 coal <- readRDS("data/scores/coalVis.rds")
 rural <- readRDS("data/scores/ruralVis.rds")
-descriptors <- read_csv("data/descriptions/indicatorDesc.csv") %>% 
+descriptors <- read_csv("data/descriptions/indicatorDesc.csv")%>%
   dplyr::select(1:6)%>%
-  `colnames<-`(c("Indicator", "Source", "Date", "Units", "Measured_Geography", "Description"))
+  `colnames<-`(c("Nombre del indicador", "Fuente de datos", "Fecha (recolección de datos)"
+                 , "Unidades", "División geográfica medida", "Description"))
+
 justice40 <- readRDS("data/scores/justice40.rds") %>%
   dplyr::mutate(popup = paste0(
-    "Census Tract ", GEOID ," in ", County_Name," County."    
+    "Census Tract ", GEOID ," in ", County_Name," County."
     ,br()
     ,"Se definió como área desfavorecida según un total de ", Total.threshold.criteria.exceeded," indicadores."
     ,br()
     ,br()
-    ,paste0("Lea la definición de comunidades de ", 
-            tags$a(href = "https://screeningtool.geoplatform.gov/en/about", 
-                   "Justice40 en la herramienta de evaluación de justicia climática y económica.", target = "_blank")  
+    ,paste0("Lea la definición de comunidades de ",
+            tags$a(href = "https://screeningtool.geoplatform.gov/en/about",
+                   "Justice40 en la herramienta de evaluación de justicia climática y económica.", target = "_blank")
     )
   )
 )
 
-# di community 
+# di community
 di <- getDI()
-# storyMap Locations 
+# storyMap Locations
 sm <- getStoryMaps()
 
-# palette for DI layer 
+# palette for DI layer
 diPal <- colorFactor(palette = c(
   "#a6cee3", "#33a02c","#b2df8a","#1f78b4"), levels = c("Low Income", "People of Color",
                                                         "Housing Burden", "More then one category"), di$color
 )
 
-### dark as low 
+### dark as low
 colorRamp <- c( "#54278f","#756bb1","#9e9ac8","#cbc9e2","#f2f0f7")
 
 
 # create initial dataset for map  -----------------------------------------
 mapData <-   envoData %>%
   dplyr::filter(area == "Condado")%>%
-  dplyr::select(GEOID,"Puntaje de Colorado EnviroScreen", 
-                "Percentil del puntaje de Colorado EnviroScreen", 
+  dplyr::select(GEOID,"Puntaje de Colorado EnviroScreen",
+                "Percentil del puntaje de Colorado EnviroScreen",
                 "Nombre del condado",
                 visParam,
                 "Comunidad con carbón",
@@ -111,8 +116,8 @@ histData <- envoData %>%
     ,"Características demográficas"
   )
 
-# set empty parameter for histogram funciton 
-## set to non GEOID number for the histogram generate on loading. 
+# set empty parameter for histogram funciton
+## set to non GEOID number for the histogram generate on loading.
 geoidMap <- "100"
 
 
@@ -121,8 +126,8 @@ ui <- fluidPage(
     bootswatch = "flatly",
     #bg = "#FFFFFF",
     #fg = "#000",
-    primary = "#245d38",# green 
-    secondary = "#001970", #blue 
+    primary = "#245d38",# green
+    secondary = "#001970", #blue
     success = "#245d38", # green
     base_font = "Trebuchet MS,Helvetica,sans-serif",
     heading_font = "Trebuchet MS,sans-serif"
@@ -134,14 +139,14 @@ ui <- fluidPage(
   title2(),
   title3(),
   title4(),
-  title5(),
+  title5(), 
   # title6(),
-  
+
   # # description of use ------------------------------------------------------
   fluidRow(class = "sectionTitle",
            h2("Understanding the EnviroScreen Tool")
   ),
-  # 
+  #
   tabsetPanel(
       use1(),
       use2(),
@@ -154,8 +159,8 @@ ui <- fluidPage(
       use9(),
       use10(),
   ),
-  
-  
+
+
   # Select Reactive Elements ------------------------------------------------
   # content for the reactive elements of the map
   br(),
@@ -257,10 +262,10 @@ ui <- fluidPage(
              )
            ),
            tags$blockquote(textOutput("indicatorDesc"))
-           
+
   ),
-  
-  
+
+
   # display map -------------------------------------------------------------
   fluidRow(tags$style(type = "text/css", "#mymap {height: calc(100vh - 250px) !important;}"), #style = {"background-color:#4d3a7d;"},
            column(1),
@@ -268,9 +273,9 @@ ui <- fluidPage(
            column(3, br(),br(),br(),br(),
                   plotlyOutput("histEnviroScreen" ,height = "80%", width = "100%")),
            column(1),
-           
+
   ),
-  
+
   # show plots --------------------------------------------------------------
   # plot of the datasets
   br(),
@@ -285,13 +290,13 @@ ui <- fluidPage(
            p("El puntaje de EnviroScreen combina cinco componentes: exposiciones ambientales, efectos ambientales, vulnerabilidad climática, población sensible y composición demográfica. Cuando se hace clic en una ubicación del mapa, las barras anaranjadas de la gráfica indican el puntaje de esa ubicación. Las barras anaranjadas muestran el puntaje de cada componente de esa ubicación en comparación con el resto de Colorado. En conjunto, las gráficas muestran cómo se calcula el puntaje de EnviroScreen para la ubicación seleccionada.")
   ),
   br(),
-  
+
   # show reactive table -----------------------------------------------------
   # table showing the results
   fluidRow(class = "sectionTitle",
            h2("EnviroScreen Score Data"),
            p("Use las pestañas que están encima de la tabla para filtrar los elementos del puntaje de Colorado EnviroScreen.  Seleccione una fila de la tabla y luego presione el botón anaranjado `Resaltar selección en el mapa` al pie de la tabla para ver la ubicación en el mapa."),
-    
+
   ),
   fluidRow(class = "dataTableArea",
            radioGroupButtons(inputId = "tableSelect", label = "",
@@ -307,7 +312,7 @@ ui <- fluidPage(
            # changed to just single table
            DT::dataTableOutput("tableAll")
   ),
-  
+
   # download table option  --------------------------------------------------
   fluidRow(
     column(3,
@@ -328,7 +333,7 @@ ui <- fluidPage(
     )
   ),
   br(),
-  
+
   fluidRow( class = "titleElement",
             column(4,
                    h3("Additional Resources"),
@@ -347,7 +352,7 @@ ui <- fluidPage(
              tags$span(style="color:white","aquí"), target = "_blank")
     )
             ),
-    
+
     column(4,tags$a(
       href = "https://cdphe.colorado.gov/enviroscreen",
       tags$img(
@@ -369,20 +374,20 @@ ui <- fluidPage(
     )
     )
   ),
-  
+
 )
 
 server <- function(input, output,session) {
   # # storing GEOIDs from table selection -------------------------------------
   RV<-reactiveValues(Clicks=list())
-  
+
   # reactive geometry selection --------------------------------------------------
   # select table
   df1 <- reactive({
     envoData %>%
-      dplyr::filter(area == input$Geom) ### need to change the input to spanish 
+      dplyr::filter(area == input$Geom) ### need to change the input to spanish
   })
-  
+
   # generate map ------------------------------------------------------------
   ## tie all this into an external function just to clean up the server script. I want the
   ## server to be focused on reactive coded not the static stuff.
@@ -542,34 +547,34 @@ server <- function(input, output,session) {
           "Esquemas narrativos"))
     map
   })
-  
-  
+
+
   # indicator summary -------------------------------------------------------
   # output for indicator summary'
   desc1 <- descriptors
   output$indicatorDesc <- renderText({
     ind1 <- input$Indicator
-    desc1 <- descriptors %>% dplyr::filter(Indicator == ind1) %>% dplyr::select("Description") %>% pull()
+    desc1 <- descriptors %>% dplyr::filter(`Nombre del indicador` == ind1) %>% dplyr::select("Description") %>% pull()
     paste0(input$Indicator," : ", as.character(desc1))
   })
-  
+
 
   # histograms --------------------------------------------------------------
-  # font for title  
+  # font for title
   fontHeader <- list(
     family = "museo-sans",
     color = "#000000",
     size = 18
   )
-  bg_color <- "#FFFFFF" # removing the blue background for this 
+  bg_color <- "#FFFFFF" # removing the blue background for this
   # font for labels
   fontBody <- list(
     family = "Trebuchet MS")
-  # plot Margins 
+  # plot Margins
   mrg <- list(l = 20, r = 20,
               b = 20, t = 30,
               pad = 10)
-  
+
   output$histEnviroScreen <- renderPlotly({
     # setting text for font elements
     fontHeader <- list(
@@ -577,7 +582,7 @@ server <- function(input, output,session) {
       color = "#000000",
       size = 18
     )
-  
+
         # condition for y axis label
     if(input$Geom == "Condado"){
       yaxisLabel <- "Cantidad de condados"
@@ -589,13 +594,13 @@ server <- function(input, output,session) {
       yaxisLabel <- "Cantidad de grupos de bloques censales"
     }
     bg_color <- "#FFFFFF" # removing the blue background for this
-    
-    
+
+
     # # filter to input parameter
     df2 <- df1() %>%
       dplyr::select("value" = "Puntaje de Colorado EnviroScreen", GEOID) %>%
       as.data.frame()
-    
+
     # construct histograms to get bin splits
     t1 <- hist(df2$value)
     # # determine bins of histogram feature
@@ -606,7 +611,7 @@ server <- function(input, output,session) {
 
     minBin <- min(t1$breaks)
     maxBin <- max(t1$breaks)
-    
+
     colors <- df2 %>%
       dplyr::count(bins) %>%
       dplyr::mutate(color = "#6d3a5d")
@@ -623,8 +628,8 @@ server <- function(input, output,session) {
               bins == binGroup  ~"#bc6123",
               TRUE ~"#6d3a5d"
             ))}}
-      
-    
+
+
     plot_ly(df2,x=~value,nbinsx = length(unique(df2$bins)))%>%
       add_histogram(
               marker = list(color = colors$color,
@@ -643,7 +648,7 @@ server <- function(input, output,session) {
                margin = mrg)%>%
         hide_legend()%>%
         style(hoverinfo = 'none')
-    
+
   })
   output$histExposure<- renderPlotly({
   # setting text for font elements
@@ -652,7 +657,7 @@ server <- function(input, output,session) {
     color = "#000000",
     size = 18
   )
-  
+
   # condition for y axis label
   if(input$Geom == "Condado"){
     yaxisLabel <- "Cantidad de condados"
@@ -664,13 +669,13 @@ server <- function(input, output,session) {
     yaxisLabel <- "Cantidad de grupos de bloques censales"
   }
   bg_color <- "#FFFFFF" # removing the blue background for this
-  
-  
+
+
   # # filter to input parameter
   df2 <- df1() %>%
     dplyr::select("value" = "Exposiciones ambientales", GEOID) %>%
     as.data.frame()
-  
+
   # construct histograms to get bin splits
   t1 <- hist(df2$value)
   # # determine bins of histogram feature
@@ -678,14 +683,14 @@ server <- function(input, output,session) {
   # set title for the plot
   title <- "Exposiciones ambientales"
   xlabel <- "Carga"
-  
+
   minBin <- min(t1$breaks)
   maxBin <- max(t1$breaks)
-  
+
   colors <- df2 %>%
     dplyr::count(bins) %>%
     dplyr::mutate(color = "#6d3a5d")
-  
+
   if(!is.null(input$mymap_shape_click$id)){
     ## determine if map click value is reflective of current map data
     if(input$mymap_shape_click[1] %in% df2$GEOID){
@@ -698,8 +703,8 @@ server <- function(input, output,session) {
             bins == binGroup  ~"#bc6123",
             TRUE ~"#6d3a5d"
           ))}}
-  
-  
+
+
   plot_ly(df2,x=~value,nbinsx = length(unique(df2$bins)))%>%
     add_histogram(
       marker = list(color = colors$color,
@@ -726,7 +731,7 @@ server <- function(input, output,session) {
     color = "#000000",
     size = 18
   )
-  
+
   # condition for y axis label
   if(input$Geom == "Condado"){
     yaxisLabel <- "Cantidad de condados"
@@ -738,13 +743,13 @@ server <- function(input, output,session) {
     yaxisLabel <- "Cantidad de grupos de bloques censales"
   }
   bg_color <- "#FFFFFF" # removing the blue background for this
-  
-  
+
+
   # # filter to input parameter
   df2 <- df1() %>%
     dplyr::select("value" = "Efectos ambientales", GEOID) %>%
     as.data.frame()
-  
+
   # construct histograms to get bin splits
   t1 <- hist(df2$value)
   # # determine bins of histogram feature
@@ -752,14 +757,14 @@ server <- function(input, output,session) {
   # set title for the plot
   title <- "Efectos ambientales"
   xlabel <- "Carga"
-  
+
   minBin <- min(t1$breaks)
   maxBin <- max(t1$breaks)
-  
+
   colors <- df2 %>%
     dplyr::count(bins) %>%
     dplyr::mutate(color = "#6d3a5d")
-  
+
   if(!is.null(input$mymap_shape_click$id)){
     ## determine if map click value is reflective of current map data
     if(input$mymap_shape_click[1] %in% df2$GEOID){
@@ -772,8 +777,8 @@ server <- function(input, output,session) {
             bins == binGroup  ~"#bc6123",
             TRUE ~"#6d3a5d"
           ))}}
-  
-  
+
+
   plot_ly(df2,x=~value,nbinsx = length(unique(df2$bins)))%>%
     add_histogram(
       marker = list(color = colors$color,
@@ -800,7 +805,7 @@ server <- function(input, output,session) {
       color = "#000000",
       size = 18
     )
-    
+
     # condition for y axis label
     if(input$Geom == "Condado"){
       yaxisLabel <- "Cantidad de condados"
@@ -812,13 +817,13 @@ server <- function(input, output,session) {
       yaxisLabel <- "Cantidad de grupos de bloques censales"
     }
     bg_color <- "#FFFFFF" # removing the blue background for this
-    
-    
+
+
     # # filter to input parameter
     df2 <- df1() %>%
       dplyr::select("value" = "Vulnerabilidad climática", GEOID) %>%
       as.data.frame()
-    
+
     # construct histograms to get bin splits
     t1 <- hist(df2$value)
     # # determine bins of histogram feature
@@ -826,14 +831,14 @@ server <- function(input, output,session) {
     # set title for the plot
     title <- "Vulnerabilidad climática"
     xlabel <- "Carga"
-    
+
     minBin <- min(t1$breaks)
     maxBin <- max(t1$breaks)
-    
+
     colors <- df2 %>%
       dplyr::count(bins) %>%
       dplyr::mutate(color = "#6d3a5d")
-    
+
     if(!is.null(input$mymap_shape_click$id)){
       ## determine if map click value is reflective of current map data
       if(input$mymap_shape_click[1] %in% df2$GEOID){
@@ -846,8 +851,8 @@ server <- function(input, output,session) {
               bins == binGroup  ~"#bc6123",
               TRUE ~"#6d3a5d"
             ))}}
-    
-    
+
+
     plot_ly(df2,x=~value,nbinsx = length(unique(df2$bins)))%>%
       add_histogram(
         marker = list(color = colors$color,
@@ -874,7 +879,7 @@ server <- function(input, output,session) {
       color = "#000000",
       size = 14
     )
-    
+
     # condition for y axis label
     if(input$Geom == "Condado"){
       yaxisLabel <- "Cantidad de condados"
@@ -886,13 +891,13 @@ server <- function(input, output,session) {
       yaxisLabel <- "Cantidad de grupos de bloques censales"
     }
     bg_color <- "#FFFFFF" # removing the blue background for this
-    
-    
+
+
     # # filter to input parameter
     df2 <- df1() %>%
       dplyr::select("value" = "Poblaciones sensibles", GEOID) %>%
       as.data.frame()
-    
+
     # construct histograms to get bin splits
     t1 <- hist(df2$value)
     # # determine bins of histogram feature
@@ -900,14 +905,14 @@ server <- function(input, output,session) {
     # set title for the plot
     title <- "Poblaciones sensibles"
     xlabel <- "Susceptibilidad"
-    
+
     minBin <- min(t1$breaks)
     maxBin <- max(t1$breaks)
-    
+
     colors <- df2 %>%
       dplyr::count(bins) %>%
       dplyr::mutate(color = "#6d3a5d")
-    
+
     if(!is.null(input$mymap_shape_click$id)){
       ## determine if map click value is reflective of current map data
       if(input$mymap_shape_click[1] %in% df2$GEOID){
@@ -920,8 +925,8 @@ server <- function(input, output,session) {
               bins == binGroup  ~"#bc6123",
               TRUE ~"#6d3a5d"
             ))}}
-    
-    
+
+
     plot_ly(df2,x=~value,nbinsx = length(unique(df2$bins)))%>%
       add_histogram(
         marker = list(color = colors$color,
@@ -948,7 +953,7 @@ server <- function(input, output,session) {
       color = "#000000",
       size = 14
     )
-    
+
     # condition for y axis label
     if(input$Geom == "Condado"){
       yaxisLabel <- "Cantidad de condados"
@@ -960,13 +965,13 @@ server <- function(input, output,session) {
       yaxisLabel <- "Cantidad de grupos de bloques censales"
     }
     bg_color <- "#FFFFFF" # removing the blue background for this
-    
-    
+
+
     # # filter to input parameter
     df2 <- df1() %>%
       dplyr::select("value" = "Características demográficas", GEOID) %>%
       as.data.frame()
-    
+
     # construct histograms to get bin splits
     t1 <- hist(df2$value)
     # # determine bins of histogram feature
@@ -974,14 +979,14 @@ server <- function(input, output,session) {
     # set title for the plot
     title <- "Características demográficas"
     xlabel <- "Vulnerabilidad"
-    
+
     minBin <- min(t1$breaks)
     maxBin <- max(t1$breaks)
-    
+
     colors <- df2 %>%
       dplyr::count(bins) %>%
       dplyr::mutate(color = "#6d3a5d")
-    
+
     if(!is.null(input$mymap_shape_click$id)){
       ## determine if map click value is reflective of current map data
       if(input$mymap_shape_click[1] %in% df2$GEOID){
@@ -994,8 +999,8 @@ server <- function(input, output,session) {
               bins == binGroup  ~"#bc6123",
               TRUE ~"#6d3a5d"
             ))}}
-    
-    
+
+
     plot_ly(df2,x=~value,nbinsx = length(unique(df2$bins)))%>%
       add_histogram(
         marker = list(color = colors$color,
@@ -1015,27 +1020,27 @@ server <- function(input, output,session) {
       hide_legend()%>%
       style(hoverinfo = 'none')
   })
-      
-      
-      # table output ------------------------------------------------------------  
+
+
+      # table output ------------------------------------------------------------
       # output for datatable based on columns selected
       tableData <- reactive({
         geoid1 <- input$mymap_shape_click
         if(is.null(geoid1$id)){
           geoid1 <- 1
         }
-        
+
         if(input$tableSelect == "Descripción de los indicadores"){
           ## Need a GEOID value to support the click selection function
           descriptors %>%
             dplyr::mutate("GEOID" = NA)%>%
-            dplyr::select("GEOID","Indicator Name"="Indicator"
-                          ,"Data Source"= "Source"
-                          ,"Date (data collection)"= "Date"
-                          ,"Units"
-                          ,"Measured Geography" = "Measured_Geography")
+            dplyr::select("GEOID","Nombre del indicador"
+                          ,"Fuente de datos"
+                          ,"Fecha (recolección de datos)"
+                          ,"Unidades"
+                          ,"División geográfica medida")
         }else{
-          # primary table. 
+          # primary table.
           table1 <- df1() %>% sf::st_drop_geometry()
           # sort table if geoid has been selected
           if(geoid1[1] %in% table1$GEOID){
@@ -1050,7 +1055,7 @@ server <- function(input, output,session) {
           }
 
           #select columns based on input
-          
+
           if(input$tableSelect == "Puntaje de los componentes en conjunto"){
             # df1()
             table1 %>%
@@ -1065,7 +1070,7 @@ server <- function(input, output,session) {
                 "Factores de salud y sociales"
               )
           } else if(input$tableSelect == "Puntaje de los componentes") {
-            table1 %>% 
+            table1 %>%
               select(
                 "GEOID",
                 "Nombre del condado",
@@ -1081,7 +1086,7 @@ server <- function(input, output,session) {
                 "Características demográficas"
               )
           } else if(input$tableSelect == "Exposiciones ambientales") {
-            table1 %>% 
+            table1 %>%
               select(
                 "GEOID",
                 "Nombre del condado"
@@ -1098,14 +1103,14 @@ server <- function(input, output,session) {
                 ,"Emisiones de contaminantes tóxicos del aire"
                 ,"Percentil de emisiones de contaminantes tóxicos del aire"
                 ,"Otros contaminantes del aire"
-                ,"Percentil de otros contaminantes del aire" 
+                ,"Percentil de otros contaminantes del aire"
                 ,"Reglamentos sobre agua potable"
                 ,"Percentil de reglamentos sobre agua potable"
                 ,"Ruido"
                 ,"Percentil de ruido"
               )
           } else if(input$tableSelect == "Efectos ambientales") {
-            table1 %>% 
+            table1 %>%
               select(
                 "GEOID"
                 ,"Nombre del condado"
@@ -1117,15 +1122,15 @@ server <- function(input, output,session) {
                 ,"Percentil de proximidad a los sitios del Plan de Gestión de Riesgos"
                 ,"Proximidad a instalaciones de residuos peligrosos"
                 ,"Percentil de proximidad a instalaciones de residuos peligrosos"
-                ,"Proximidad a petróleo y gas" 
-                ,"Percentil de proximidad a petróleo y gas" 
-                ,"Proximidad a ubicaciones de minería" 
-                ,"Percentil de proximidad a ubicaciones de minería" 
-                ,"Arroyos y ríos deteriorados" 
+                ,"Proximidad a petróleo y gas"
+                ,"Percentil de proximidad a petróleo y gas"
+                ,"Proximidad a ubicaciones de minería"
+                ,"Percentil de proximidad a ubicaciones de minería"
+                ,"Arroyos y ríos deteriorados"
                 ,"Percentil de arroyos y ríos deteriorados"
               )
           }  else if(input$tableSelect == "Vulnerabilidad climática") {
-            table1 %>% 
+            table1 %>%
               select(
                 "GEOID"
                 ,"Nombre del condado"
@@ -1139,7 +1144,7 @@ server <- function(input, output,session) {
                 ,"Percentil de días de calor extremo"
               )
           } else if(input$tableSelect == "Poblaciones sensibles") {
-            table1 %>% 
+            table1 %>%
               select(
                 "GEOID"
                 ,"Nombre del condado"
@@ -1163,12 +1168,12 @@ server <- function(input, output,session) {
                 ,"Percentil del indicador de salud mental"
               )
           } else if(input$tableSelect == "Características demográficas") {
-            table1 %>%  
+            table1 %>%
               select(
                 "GEOID"
                 ,"Nombre del condado"
                 ,"Porcentaje de personas de color"
-                ,"Percentil del porcentaje de personas de color" 
+                ,"Percentil del porcentaje de personas de color"
                 ,"Porcentaje que no completaron los estudios de secundaria"
                 ,"Percentil del porcentaje que no completaron los estudios de secundaria"
                 ,"Porcentaje de bajos ingresos"
@@ -1177,11 +1182,11 @@ server <- function(input, output,session) {
                 ,"Percentil del porcentaje de aislamiento lingüístico"
                 ,"Porcentaje de discapacidades"
                 ,"Percentil del porcentaje de discapacidades"
-                ,"Sobrecarga por gastos de vivienda" 
+                ,"Sobrecarga por gastos de vivienda"
                 ,"Percentil de sobrecarga por gastos de vivienda"
               )
           }  else if(input$tableSelect == "Clasificación de las comunidades") {
-            table1 %>%  
+            table1 %>%
               select(
                 "GEOID",
                 "Nombre del condado",
@@ -1189,15 +1194,15 @@ server <- function(input, output,session) {
                 "Comunidad de Justice40"
                 ,"Comunidad con carbón"
                 ,"Comunidad con petróleo y gas"
-                ,"Comunidad rural", 
+                ,"Comunidad rural",
                 "Total de la población"
               )
-          } 
+          }
 
         }
       })
-      
-      
+
+
       # storing GEOIDs from table/map selection -------------------------------------
       RV<-reactiveValues()
 
@@ -1216,7 +1221,7 @@ server <- function(input, output,session) {
         DT::datatable(tableData(),
                       options = list(autoWidth = TRUE, scrollX = TRUE))
       })
-      
+
       # Table proxy for selection
       observe({
         DT::dataTableProxy("tableAll") %>%
@@ -1241,7 +1246,7 @@ server <- function(input, output,session) {
           write.csv(descriptors, file, row.names = FALSE)
         }
       )
-      
+
       # proxy map elements  -----------------------------------------------------
       observeEvent(input$updateMap, {
         ### helpful source https://stackoverflow.com/questions/37433569/changing-leaflet-map-according-to-input-without-redrawing
@@ -1366,4 +1371,3 @@ server <- function(input, output,session) {
 }
 # Run the application
 shinyApp(ui = ui, server = server)
-

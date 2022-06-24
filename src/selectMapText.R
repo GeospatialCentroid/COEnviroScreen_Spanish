@@ -1,5 +1,5 @@
 #text for the Select Reactive Elements section 
-# group all non reactive text elements by fluid rows.Largerly for organization. 
+# group all non reactive text elements by fluid rows.Largerly for organization.
 
 
 mapText1 <- function(){
@@ -101,6 +101,6 @@ mapText1 <- function(){
              )
            ),
            tags$blockquote(textOutput("indicatorDesc"))
-           
+
   )
 }
