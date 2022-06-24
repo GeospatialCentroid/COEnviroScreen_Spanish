@@ -18,15 +18,15 @@ initialMapData <- function(data1){
                   "ccpg" = 94,
                   "Comunidad rural")%>%
     dplyr::mutate(
-    popup = paste0(
-          "<br/><strong>Puntaje de Colorado EnviroScreen</strong>", # needs to be text
-          paste0("<br/><strong>",`Nombre del condado`,"</strong>"),
-          paste0("<br/><b>Medino:</b> ", round(`Puntaje de Colorado EnviroScreen`, digits = 2),
-            "<br/><b>Puntaje:</b> ", as.character(round(`Percentil del puntaje de Colorado EnviroScreen`), digits =  0)),
-          paste0("<br/><b>Comunidad con carbón:</b> ", `ccc`),
-          paste0("<br/><b>Comunidad con petróleo y gas:</b> ", `ccpg`),
-          paste0("<br/><b>Comunidad rural:</b> ", `Comunidad rural`)
-        )
+      popup = paste0(
+        "<br/><strong>Puntaje de Colorado EnviroScreen</strong>", # needs to be text
+        paste0("<br/><strong>",`Nombre del condado`,"</strong>"),
+        paste0("<br/><b>Medino:</b> ", round(`Puntaje de Colorado EnviroScreen`, digits = 2),
+               "<br/><b>Puntaje:</b> ", as.character(round(`Percentil del puntaje de Colorado EnviroScreen`), digits =  0)),
+        paste0("<br/><b>Comunidad con carbón:</b> ", `ccc`),
+        paste0("<br/><b>Comunidad con petróleo y gas:</b> ", `ccpg`),
+        paste0("<br/><b>Comunidad rural:</b> ", `Comunidad rural`)
+      )
     )
   
   d1 <- as(d1, "sf")

@@ -1,6 +1,6 @@
 ###
-# Locations for story map elements 
-### 
+# Locations for story map elements
+###
 
 getStoryMaps <- function(){
   # Four Corners:  125 Mike Wash Rd. Towaoc, Colorado, 81334 (UMU tribal headquarters)
@@ -15,14 +15,14 @@ getStoryMaps <- function(){
   p5 <- c(-104.67061937301114,40.40607858327397)
   # Pueblo:  2100 South Fwy Rd, Pueblo, CO 81004
   p6 <- c(-104.61297792866519, 38.225367616365105)
-  
-  
-  # generate dataframe 
+
+
+  # generate dataframe
   df <- data.frame(
     Area = c(
       "Four Corners",
-      "San Luis Valley",
-      "Arkansas Valley",
+      "Valle de San Luis",
+      "Valle del Arkansas",
       "Commerce City/North Denver",
       "Greeley",
       "Pueblo"),
@@ -61,20 +61,24 @@ getStoryMaps <- function(){
     storyMap = c(
       "https://cdphe.colorado.gov/enviroscreen",
       "https://cdphe.colorado.gov/enviroscreen",
+      "https://storymaps.arcgis.com/stories/820a90b4ee784af5ad813eb5ddcb61af",
       "https://cdphe.colorado.gov/enviroscreen",
       "https://cdphe.colorado.gov/enviroscreen",
-      "https://cdphe.colorado.gov/enviroscreen",
-      "https://cdphe.colorado.gov/enviroscreen"
+      "https://storymaps.arcgis.com/stories/0ef3038fda624133ba3c517462ed0e8d"
     )
   )%>%
-    dplyr::mutate(popup = 
-      paste0(
-        "Learn more about the environmental justice story in the ", `Area`, " region",
-        paste0("<a href=",storyMap,"> on this Story Map.</a>"))
+    dplyr::mutate(popup = case_when(
+      Area %in% c("Pueblo", "Valle del Arkansas") ~  paste0(
+        "La historia en el mapa brinda más información sobre la historia de justicia ambiental en la región de ",
+       "<a href=",storyMap,"> región de </a>",`Area`,"." ),
+      TRUE ~ "Coming soon"
+    )
     )%>%
     sf::st_as_sf(coords = c("Lon","Lat"),remove = FALSE)%>%
     sf::st_set_crs(value = 4326)
-  
+
+  # subset features that will not be present at release
+  df <- df %>% dplyr::filter(!Area %in% c("Four Corners","Greeley"))
+
   return(df)
 }
-
