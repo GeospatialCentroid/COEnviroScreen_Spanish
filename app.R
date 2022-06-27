@@ -78,7 +78,7 @@ mapData <-   envoData %>%
     popup = paste0(
       "<br/><strong>Puntaje de Colorado EnviroScreen</strong>", # needs to be text
       paste0("<br/><strong>",`Nombre del condado`,"</strong>"),
-      paste0("<br/><b>Medino:</b> ", round(`Puntaje de Colorado EnviroScreen`, digits = 2),
+      paste0("<br/><b>Medida:</b> ", round(`Puntaje de Colorado EnviroScreen`, digits = 2),
              "<br/><b>Puntaje:</b> ", as.character(round(`Percentil del puntaje de Colorado EnviroScreen`), digits =  0)),
       paste0("<br/><b>Comunidad con carbón:</b> ", `Comunidad con carbón`),
       paste0("<br/><b>Comunidad con petróleo y gas:</b> ", `Comunidad con petróleo y gas`),
@@ -259,7 +259,7 @@ ui <- fluidPage(
              ),
              tags$h4("Paso 2: Interactúe con el mapa."),
              p(
-               "Los condados, sectores censales y grupos de bloques censales individuales están codificados por colores según la capa del mapa que elija. La leyenda que aparece a la derecha del mapa explica el significado de los colores. Cuanto más oscuros son los colores, más altos son los valores y, cuanto más altos son los valores, peor es el puntaje de EnviroScreen. Use los iconos que aparecen en la esquina superior izquierda del mapa para acercar y alejar la vista, buscar una dirección, centrar el mapa, elegir el color de fondo de su preferencia o añadir más capas."
+               "Los condados, áreas censales y grupos de manzanas censales individuales están codificados por colores según la capa del mapa que elija. La leyenda que aparece a la derecha del mapa explica el significado de los colores. Cuanto más oscuros son los colores, más altos son los valores y, cuanto más altos son los valores, peor es el puntaje de EnviroScreen. Use los iconos que aparecen en la esquina superior izquierda del mapa para acercar y alejar la vista, buscar una dirección, centrar el mapa, elegir el color de fondo de su preferencia o añadir más capas."
                ,br()
                ,br()
                ,tags$strong("Aprenda más sobre una zona")
@@ -764,7 +764,7 @@ ui <- fluidPage(
                            selectInput(
                              inputId = "Geom",
                              label = "Escala geográfica",
-                             choices = c("Condado", "Sector censal", "Grupo de bloques censales"),
+                             choices = c("Condado", "Área censal", "Grupo de manzanas censales"),
                              selected = "Condado",
                              width = "90%"
                            )
@@ -778,7 +778,7 @@ ui <- fluidPage(
                              label = "Indicador",
                              choices = list(
                                "Puntaje de Colorado EnviroScreen" = "Puntaje de Colorado EnviroScreen",
-                               "Puntaje de los componentes en conjunto" = c("Contaminación y carga climática",
+                               "Puntaje de los componentes agrupados" = c("Contaminación y carga climática",
                                                                             "Factores de salud y sociales"),
                                "Puntaje de los componentes" =c("Exposiciones ambientales",
                                                                "Efectos ambientales",
@@ -793,11 +793,11 @@ ui <- fluidPage(
                                                               "Otros contaminantes del aire",
                                                               "Ozono",
                                                               "Contaminación por partículas finas",
-                                                              "Proximidad y volumen de tránsito"
+                                                              "Proximidad y volumen de tráfico"
                                ),
                                "Efectos ambientales" = c("Arroyos y ríos deteriorados",
                                                          "Proximidad a instalaciones de residuos peligrosos",
-                                                         "Proximidad a ubicaciones de minería",
+                                                         "Proximidad a ubicaciones de minas",
                                                          "Proximidad a los sitios de la Lista Nacional de Prioridades",
                                                          "Proximidad a petróleo y gas",
                                                          "Proximidad a los sitios del Plan de Gestión de Riesgos",
@@ -805,13 +805,13 @@ ui <- fluidPage(
                                ),
                                "Vulnerabilidad climática" = c("Sequía",
                                                               "Días de calor extremo",
-                                                              "Llanuras aluviales",
+                                                              "Inundación (plaicies aluviales)",
                                                               "Riesgo de incendios forestales"
                                ),
                                "Poblaciones sensibles" = c("Tasa de hospitalización por asma",
-                                                           "Predominio de cáncer",
-                                                           "Predominio de diabetes",
-                                                           "Cardiopatías en adultos",
+                                                           "Prevalencia de cáncer",
+                                                           "Prevalencia de diabetes",
+                                                           "Enfermedades cardiacas en adultos",
                                                            "Expectativa de vida",
                                                            "Bajo peso al nacer",
                                                            "Indicador de salud mental",
@@ -887,11 +887,11 @@ ui <- fluidPage(
   ),
   fluidRow(class = "dataTableArea",
            radioGroupButtons(inputId = "tableSelect", label = "",
-                             choices = c("Puntaje de los componentes en conjunto", "Puntaje de los componentes",
+                             choices = c("Puntaje de los componentes agrupados", "Puntaje de los componentes",
                                          "Exposiciones ambientales", "Efectos ambientales",
                                          "Vulnerabilidad climática", "Poblaciones sensibles",
                                          "Características demográficas",
-                                         "Clasificación de las comunidades",
+                                         "Clasificaciones de la comunidad",
                                          "Descripción de los indicadores"),
                              #justified = TRUE
            ),
@@ -910,7 +910,7 @@ ui <- fluidPage(
     ),
     column(3,
            tags$div(title="Click here to download content",
-                    downloadButton("downloadData", "Descargar datos para división geográfica actual")
+                    downloadButton("downloadData", "Descargar datos usando división geográfica actual")
            ),
     ),
     column(3,
@@ -1053,7 +1053,7 @@ server <- function(input, output,session) {
         # fillColor = "goldenrod",
         # fillOpacity = 1,
         # stroke = F,
-        group = "Esquemas narrativos",
+        group = "Historias en el mapa",
         options = pathOptions(pane = "elements"),
         icon = sm_Icon
       )%>%
@@ -1061,7 +1061,7 @@ server <- function(input, output,session) {
     addLegend(
       "topright",
       colors = colorRamp,
-      title = "Valores aproxestimados.",
+      title = "Valores estimados.",
       labels = c(" Mayor carga", "", "", "", " Menos carga"),
       opacity = 1,
       layerId = "firstLegend",
@@ -1113,7 +1113,7 @@ server <- function(input, output,session) {
         'Comunidad con petroleo y gas',
         "Comunidad afectada de manera desproporcionada",
         "Comunidad de Justice40",
-        "Esquemas narrativos"
+        "Historias en el mapa"
       ),
       position = "topleft",
       options = layersControlOptions(collapsed = TRUE))%>%
@@ -1131,7 +1131,7 @@ server <- function(input, output,session) {
           'Comunidad con petroleo y gas',
           "Comunidad afectada de manera desproporcionada",
           "Comunidad de Justice40",
-          "Esquemas narrativos"))
+          "Historias en el mapa"))
     map
   })
 
@@ -1174,11 +1174,11 @@ server <- function(input, output,session) {
     if(input$Geom == "Condado"){
       yaxisLabel <- "Cantidad de condados"
     }
-    if(input$Geom == "Sector censal"){
-      yaxisLabel <- "Cantidad de sectores censales"
+    if(input$Geom == "Área censal"){
+      yaxisLabel <- "Cantidad de áreas censales"
     }
-    if(input$Geom == "Grupo de bloques censales"){
-      yaxisLabel <- "Cantidad de grupos de bloques censales"
+    if(input$Geom == "Grupo de manzanas censales"){
+      yaxisLabel <- "Cantidad de grupos de manzanas censales"
     }
     bg_color <- "#FFFFFF" # removing the blue background for this
 
@@ -1249,11 +1249,11 @@ server <- function(input, output,session) {
   if(input$Geom == "Condado"){
     yaxisLabel <- "Cantidad de condados"
   }
-  if(input$Geom == "Sector censal"){
-    yaxisLabel <- "Cantidad de sectores censales"
+  if(input$Geom == "Área censal"){
+    yaxisLabel <- "Cantidad de áreas censales"
   }
-  if(input$Geom == "Grupo de bloques censales"){
-    yaxisLabel <- "Cantidad de grupos de bloques censales"
+  if(input$Geom == "Grupo de manzanas censales"){
+    yaxisLabel <- "Cantidad de grupos de manzanas censales"
   }
   bg_color <- "#FFFFFF" # removing the blue background for this
 
@@ -1323,11 +1323,11 @@ server <- function(input, output,session) {
   if(input$Geom == "Condado"){
     yaxisLabel <- "Cantidad de condados"
   }
-  if(input$Geom == "Sector censal"){
-    yaxisLabel <- "Cantidad de sectores censales"
+  if(input$Geom == "Área censal"){
+    yaxisLabel <- "Cantidad de áreas censales"
   }
-  if(input$Geom == "Grupo de bloques censales"){
-    yaxisLabel <- "Cantidad de grupos de bloques censales"
+  if(input$Geom == "Grupo de manzanas censales"){
+    yaxisLabel <- "Cantidad de grupos de manzanas censales"
   }
   bg_color <- "#FFFFFF" # removing the blue background for this
 
@@ -1397,11 +1397,11 @@ server <- function(input, output,session) {
     if(input$Geom == "Condado"){
       yaxisLabel <- "Cantidad de condados"
     }
-    if(input$Geom == "Sector censal"){
-      yaxisLabel <- "Cantidad de sectores censales"
+    if(input$Geom == "Área censal"){
+      yaxisLabel <- "Cantidad de áreas censales"
     }
-    if(input$Geom == "Grupo de bloques censales"){
-      yaxisLabel <- "Cantidad de grupos de bloques censales"
+    if(input$Geom == "Grupo de manzanas censales"){
+      yaxisLabel <- "Cantidad de grupos de manzanas censales"
     }
     bg_color <- "#FFFFFF" # removing the blue background for this
 
@@ -1471,11 +1471,11 @@ server <- function(input, output,session) {
     if(input$Geom == "Condado"){
       yaxisLabel <- "Cantidad de condados"
     }
-    if(input$Geom == "Sector censal"){
-      yaxisLabel <- "Cantidad de sectores censales"
+    if(input$Geom == "Área censal"){
+      yaxisLabel <- "Cantidad de áreas censales"
     }
-    if(input$Geom == "Grupo de bloques censales"){
-      yaxisLabel <- "Cantidad de grupos de bloques censales"
+    if(input$Geom == "Grupo de manzanas censales"){
+      yaxisLabel <- "Cantidad de grupos de manzanas censales"
     }
     bg_color <- "#FFFFFF" # removing the blue background for this
 
@@ -1545,11 +1545,11 @@ server <- function(input, output,session) {
     if(input$Geom == "Condado"){
       yaxisLabel <- "Cantidad de condados"
     }
-    if(input$Geom == "Sector censal"){
-      yaxisLabel <- "Cantidad de sectores censales"
+    if(input$Geom == "Área censal"){
+      yaxisLabel <- "Cantidad de áreas censales"
     }
-    if(input$Geom == "Grupo de bloques censales"){
-      yaxisLabel <- "Cantidad de grupos de bloques censales"
+    if(input$Geom == "Grupo de manzanas censales"){
+      yaxisLabel <- "Cantidad de grupos de manzanas censales"
     }
     bg_color <- "#FFFFFF" # removing the blue background for this
 
@@ -1643,7 +1643,7 @@ server <- function(input, output,session) {
 
           #select columns based on input
 
-          if(input$tableSelect == "Puntaje de los componentes en conjunto"){
+          if(input$tableSelect == "Puntaje de los componentes agrupados"){
             # df1()
             table1 %>%
               select(
@@ -1685,8 +1685,8 @@ server <- function(input, output,session) {
                 ,"Percentil de riesgo de exposición al plomo"
                 ,"Material particulado (PM) de diésel"
                 ,"Percentil de material particulado (PM) de diésel"
-                ,"Proximidad y volumen de tránsito"
-                ,"Percentil de proximidad y volumen de tránsito"
+                ,"Proximidad y volumen de tráfico"
+                ,"Percentil de proximidad y volumen de tráfico"
                 ,"Emisiones de contaminantes tóxicos del aire"
                 ,"Percentil de emisiones de contaminantes tóxicos del aire"
                 ,"Otros contaminantes del aire"
@@ -1711,8 +1711,8 @@ server <- function(input, output,session) {
                 ,"Percentil de proximidad a instalaciones de residuos peligrosos"
                 ,"Proximidad a petróleo y gas"
                 ,"Percentil de proximidad a petróleo y gas"
-                ,"Proximidad a ubicaciones de minería"
-                ,"Percentil de proximidad a ubicaciones de minería"
+                ,"Proximidad a minas"
+                ,"Percentil de proximidad a minas"
                 ,"Arroyos y ríos deteriorados"
                 ,"Percentil de arroyos y ríos deteriorados"
               )
@@ -1723,8 +1723,8 @@ server <- function(input, output,session) {
                 ,"Nombre del condado"
                 ,"Riesgo de incendios forestales"
                 ,"Percentil de riesgo de incendios forestales"
-                ,"Llanuras aluviales"
-                ,"Percentil de llanuras aluviales"
+                ,"Inundación (plaicies aluviales)"
+                ,"Percentil de inundación (plaicies aluviales)"
                 ,"Sequía"
                 ,"Percentil de sequía"
                 ,"Días de calor extremo"
@@ -1739,18 +1739,18 @@ server <- function(input, output,session) {
                 ,"Percentil de población por debajo de 5 años"
                 ,"Población por encima de 64 años"
                 ,"Percentil de población por encima de 64 años"
-                ,"Cardiopatías en adultos"
-                ,"Percentil de cardiopatías en adultos"
+                ,"Enfermedades cardiacas en adultos"
+                ,"Percentil de enfermedades cardiacas en adultos"
                 ,"Tasa de hospitalización por asma"
                 ,"Percentil de tasa de hospitalización por asma"
                 ,"Expectativa de vida"
                 ,"Percentil de expectativa de vida"
                 ,"Bajo peso al nacer"
                 ,"Percentil de bajo peso al nacer"
-                ,"Predominio de cáncer"
-                ,"Percentil de predominio de cáncer"
-                ,"Predominio de diabetes"
-                ,"Percentil de predominio de diabetes"
+                ,"Prevalencia de cáncer"
+                ,"Percentil de prevalencia de cáncer"
+                ,"Prevalencia de diabetes"
+                ,"Percentil de prevalencia de diabetes"
                 ,"Indicador de salud mental"
                 ,"Percentil del indicador de salud mental"
               )
@@ -1772,7 +1772,7 @@ server <- function(input, output,session) {
                 ,"Sobrecarga por gastos de vivienda"
                 ,"Percentil de sobrecarga por gastos de vivienda"
               )
-          }  else if(input$tableSelect == "Clasificación de las comunidades") {
+          }  else if(input$tableSelect == "Clasificaciones de la comunidad") {
             table1 %>%
               select(
                 "GEOID",
@@ -1924,7 +1924,7 @@ server <- function(input, output,session) {
           addLegend(
             "topright",
             colors = colorRamp,
-            title = "Valores aprox.",
+            title = "Valores estimados",
             labels = labels1,
             opacity = 1,
             layerId = "firstLegend",

@@ -5,8 +5,8 @@ defineLegend<- function(indicator){
     cat1 <- c("Poblaciones sensibles"
               ,"Población por debajo de 5 años"
               ,"Población por encima de 64 años"
-              ,"Cardiopatías en adultos"
-              ,"Asthma hospitalization rate"
+              ,"Enfermedades cardiacas en adultos"
+              ,"Tasa de hospitalización por asma"
               ,"Expectativa de vida"
               ,"Bajo peso al nacer")
               
