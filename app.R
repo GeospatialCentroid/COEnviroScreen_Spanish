@@ -12,7 +12,7 @@ library(data.table)
 library(leaflegend)
 library(shinyBS)
 library(shinyWidgets)
-
+library(readr)
 
 
 
@@ -25,7 +25,108 @@ envoData <- readRDS("data/scores/allScores4spanish.rds")%>%
   dplyr::select("Nombre del condado", "GEOID", everything())%>%
   dplyr::select(-"GEOID3")
 
-names(envoData) <- iconv(names(envoData), "UTF-8")
+names(envoData)<- c(
+  "GEOID"
+  ,"Nombre del condado"
+  ,"Puntaje de Colorado EnviroScreen"
+  ,"Percentil del puntaje de Colorado EnviroScreen"
+  ,"Contaminación y carga climática"
+  ,"Percentil de contaminación y carga climática"
+  ,"Pollution and Climate Burden Scale Value"
+  ,"Factores de salud y sociales"
+  ,"Percentil de factores de salud y sociales"
+  ,"Health and Social Factors Scale Value" 
+  ,"Exposiciones ambientales"
+  ,"Efectos ambientales"
+  ,"Vulnerabilidad climática"
+  ,"Poblaciones sensibles"
+  ,"Características demográficas"
+  ,"Percentil de exposiciones ambientales"
+  ,"Percentil de efectos ambientales"
+  ,"Percentil de vulnerabilidad climática"
+  ,"Percentil de poblaciones sensibles"
+  ,"Percentil de características demográficas"
+  ,"Ozono"
+  ,"Percentil de ozono"
+  ,"Contaminación por partículas finas"
+  ,"Percentil de contaminación por partículas finas"
+  ,"Riesgo de exposición al plomok"
+  ,"Percentil de riesgo de exposición al plomo"
+  ,"Material particulado (PM) de diésel"
+  ,"Percentil de material particulado (PM) de diésel"
+  ,"Proximidad y volumen de tráfico"
+  ,"Percentil de proximidad y volumen de tráfico"
+  ,"Emisiones de contaminantes tóxicos del aire"
+  ,"Percentil de emisiones de contaminantes tóxicos del aire"
+  ,"Otros contaminantes del aire" 
+  ,"Percentil de otros contaminantes del aire" 
+  ,"Reglamentos sobre agua potable" 
+  ,"Percentil de reglamentos sobre agua potable"
+  ,"Ruido" 
+  ,"Percentil de ruido" 
+  ,"Indicador de descargas de aguas residuales"
+  ,"Percentil del indicador de descargas de aguas residuales"
+  ,"Proximidad a los sitios de la Lista Nacional de Prioridades"
+  ,"Percentil de proximidad a los sitios de la Lista Nacional de Prioridades"
+  ,"Proximidad a los sitios del Plan de Gestión de Riesgos"
+  ,"Percentil de proximidad a los sitios del Plan de Gestión de Riesgos"
+  ,"Proximidad a instalaciones de residuos peligrosos" 
+  ,"Percentil de proximidad a instalaciones de residuos peligrosos"
+  ,"Proximidad a petróleo y gas" 
+  ,"Percentil de proximidad a petróleo y gas" 
+  ,"Proximidad a minas" 
+  ,"Percentil de proximidad a minas" 
+  ,"Arroyos y ríos deteriorados" 
+  ,"Percentil de arroyos y ríos deteriorados" 
+  ,"Riesgo de incendios forestales"
+  ,"Percentil de riesgo de incendios forestales"
+  ,"Inundación (planicies aluviales)"
+  ,"Percentil de inundación (planicies aluviales)"
+  ,"Sequía"
+  ,"Percentil de sequía"
+  ,"Días de calor extremo"
+  ,"Percentil de días de calor extremo"
+  ,"Población por debajo de 5 años"
+  ,"Percentil de población por debajo de 5 años"
+  ,"Población por encima de 64 años"
+  ,"Percentil de población por encima de 64 años"
+  ,"Enfermedades cardiacas en adultos"
+  ,"Percentil de enfermedades cardiacas en adultos"
+  ,"Tasa de hospitalización por asma"
+  ,"Percentil de tasa de hospitalización por asma"
+  ,"Expectativa de vida"
+  ,"Percentil de expectativa de vida"
+  ,"Bajo peso al nacer"
+  ,"Percentil de bajo peso al nacer"
+  ,"Prevalencia de cáncer"
+  ,"Percentil de prevalencia de cáncer"
+  ,"Prevalencia de diabetes"
+  ,"Percentil de prevalencia de diabetes"
+  ,"Indicador de salud mental"
+  ,"Percentil del indicador de salud mental"
+  ,"Porcentaje de personas de color"
+  ,"Percentil del porcentaje de personas de color" 
+  ,"Porcentaje que no completaron los estudios de secundaria"
+  ,"Percentil del porcentaje que no completaron los estudios de secundaria"
+  ,"Porcentaje de bajos ingresos"
+  ,"Percentil del porcentaje de bajos ingresos"
+  ,"Porcentaje de aislamiento lingüístico"
+  ,"Percentil del porcentaje de aislamiento lingüístico"
+  ,"Porcentaje de discapacidades"
+  ,"Percentil del porcentaje de discapacidades"
+  ,"Sobrecarga por gastos de vivienda" 
+  ,"Percentil de sobrecarga por gastos de vivienda"
+  ,"area"
+  ,"geometry"
+  ,"Comunidad con carbón"                                                   
+  ,"Comunidad con petróleo y gas"                                           
+  ,"Comunidad rural"                                                         
+  ,"Comunidad de Justice40"                                                  
+  ,"Comunidad afectada de manera desproporcionada"                           
+  ,"Total de la población"                                                  
+  ,"visParam"
+)
+
 
 
 # Additional Data
@@ -36,6 +137,7 @@ descriptors <- read_csv("data/descriptions/indicatorDesc.csv")%>%
   dplyr::select(1:6)%>%
   `colnames<-`(c("Nombre del indicador", "Fuente de datos", "Fecha (recolección de datos)"
                  , "Unidades", "División geográfica medida", "Description"))
+
 
 justice40 <- readRDS("data/scores/justice40.rds") %>%
   dplyr::mutate(popup = paste0(
@@ -52,9 +154,131 @@ justice40 <- readRDS("data/scores/justice40.rds") %>%
 )
 
 # di community
-di <- getDI()
+di <- readRDS("data/scores/diCommunities.rds")%>%
+  mutate(
+    Mn_FLAG = case_when(
+      Min_FLAG == 1 ~ "Yes",
+      Min_FLAG == 0 ~ "No"
+    ),
+    FLP_FLA = case_when(
+      FLP_FLAG == 1 ~ "Yes",
+      FLP_FLAG == 0 ~ "No"
+    ),
+    Br_FLAG = case_when(
+      Burdened_FLAG == 1 ~ "Yes",
+      Burdened_FLAG == 0 ~ "No"
+    )
+  )%>%
+  mutate(popup =
+           paste0(
+             "<br/><strong>Comunidad afectada de manera desproporcionada: </strong>",
+             "<br/><b>Grupo de manzanas censales: </b>", GEOID,
+             "<br/>",
+             "<br/><b>40 % de las viviendas son de bajos ingresos: </b>", FLP_FLA,
+             "<br/><b>Porcentaje de bajos ingresos: </b>", round(Pov_PCT*100, digits = 1),
+             "<br/>",
+             "<br/><b>40 % de las viviendas están integradas por personas de color : </b>", Mn_FLAG,
+             "<br/><b>Porcentaje de personas de color: </b>", round(Min_PCT*100, digits = 1),
+             "<br/>",
+             "<br/><b>40 % de las viviendas con sobrecarga por gastos de vivienda : </b>", Br_FLAG,
+             "<br/><b>Porcentaje con sobrecarga por gastos de vivienda: </b>", round(HH_Burdened_Pct*100, digits = 1)
+             ,"<br/>"
+             ,"<br/>"
+             ,"Lea la definición de comunidad afectada de manera desproporcionada de Colorado en la " 
+             ,tags$a(href = "https://cdphe.colorado.gov/environmental-justice", " Ley de Justicia Ambiental.", target = "_blank")
+           )
+  )%>%
+  mutate(
+    color = as.factor(case_when(
+      Mn_FLAG == "Yes" & FLP_FLA == "No" & Br_FLAG == "No" ~ "People of Color",
+      Mn_FLAG == "No" & FLP_FLA == "Yes" & Br_FLAG == "No" ~ "Low Income",
+      Mn_FLAG == "No" & FLP_FLA == "No" & Br_FLAG == "Yes" ~ "Housing Burden",
+      TRUE ~ "Más de una categoría"
+    ))
+  )%>%
+  as('sf')
+  
+  
+  
+  
+  
 # storyMap Locations
-sm <- getStoryMaps()
+# Four Corners:  125 Mike Wash Rd. Towaoc, Colorado, 81334 (UMU tribal headquarters)
+p1 <- c(-108.72899716653774, 37.20196682678452)
+# San Luis Valley:   401 E Church Pl, San Luis, CO 81152 (address for the Sangre de Cristo Acequia Association)
+p2 <- c(-105.42485992382689, 37.199663723970666)
+# Arkansas Valley:  317 Main St.,. Fowler, CO 81039 (address for the Town of Fowler municipal government)
+p3 <- c(-104.02375113856519,38.12911006843698)
+# Commerce City/North Denver:  5801 Brighton Blvd, Commerce City, CO 80022 (address of the Suncor refinery)
+p4 <- c(-104.94911866809777, 39.80253978971713)
+# Greeley:  614 E 20th St, Greeley, CO 80631 (address of Bella Romero K-8 school)
+p5 <- c(-104.67061937301114,40.40607858327397)
+# Pueblo:  2100 South Fwy Rd, Pueblo, CO 81004
+p6 <- c(-104.61297792866519, 38.225367616365105)
+
+
+# generate dataframe
+df <- data.frame(
+  Area = c(
+    "Four Corners",
+    "Valle de San Luis",
+    "Valle del Arkansas",
+    "Commerce City/North Denver",
+    "Greeley",
+    "Pueblo"),
+  Address  = c(
+    "125 Mike Wash Rd. Towaoc, Colorado, 81334",
+    "401 E Church Pl, San Luis, CO 81152",
+    "317 Main St.,. Fowler, CO 81039",
+    "5801 Brighton Blvd, Commerce City, CO 80022",
+    "614 E 20th St, Greeley, CO 80631",
+    "2100 South Fwy Rd, Pueblo, CO 81004"
+  ),
+  Organization  = c(
+    "UMU tribal headquarters",
+    "Sangre de Cristo Acequia Association",
+    "Town of Fowler municipal government",
+    "Suncor refinery",
+    "Bella Romero K-8 school",
+    "EVRAZ Pueblo"
+  ),
+  Lon  = c(
+    -108.72899716653774,
+    -105.42485992382689,
+    -104.02375113856519,
+    -104.94911866809777,
+    -104.67061937301114,
+    -104.61297792866519
+  ),
+  Lat  = c(
+    37.20196682678452,
+    37.199663723970666,
+    38.12911006843698,
+    39.80253978971713,
+    40.40607858327397,
+    38.225367616365105
+  ),
+  storyMap = c(
+    "https://cdphe.colorado.gov/enviroscreen",
+    "https://cdphe.colorado.gov/enviroscreen",
+    "https://storymaps.arcgis.com/stories/820a90b4ee784af5ad813eb5ddcb61af",
+    "https://cdphe.colorado.gov/enviroscreen",
+    "https://cdphe.colorado.gov/enviroscreen",
+    "https://storymaps.arcgis.com/stories/0ef3038fda624133ba3c517462ed0e8d"
+  )
+)%>%
+  dplyr::mutate(popup = case_when(
+    Area %in% c("Pueblo", "Valle del Arkansas") ~  paste0(
+      "La historia en el mapa brinda más información sobre la historia de justicia ambiental en la región de ",
+      "<a href=",storyMap,"> región de </a>",`Area`,"." ),
+    TRUE ~ "Coming soon"
+  )
+  )%>%
+  sf::st_as_sf(coords = c("Lon","Lat"),remove = FALSE)%>%
+  sf::st_set_crs(value = 4326)
+
+# subset features that will not be present at release
+sm <- df %>% dplyr::filter(!Area %in% c("Four Corners","Greeley"))
 
 # palette for DI layer
 diPal <- colorFactor(palette = c(
@@ -86,7 +310,8 @@ mapData <-   envoData %>%
       paste0("<br/><b>Comunidad con petróleo y gas:</b> ", `Comunidad con petróleo y gas`),
       paste0("<br/><b>Comunidad rural:</b> ", `Comunidad rural`)
     )
-  ) %>% as("sf")
+  )%>% as("sf")
+
 
 #palette for the map
 palMap <- leaflet::colorNumeric(palette = colorRamp,
