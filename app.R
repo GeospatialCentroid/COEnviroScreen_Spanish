@@ -25,6 +25,8 @@ envoData <- readRDS("data/scores/allScores4spanish.rds")%>%
   dplyr::select("Nombre del condado", "GEOID", everything())%>%
   dplyr::select(-"GEOID3")
 
+names(envoData) <- iconv(names(envoData), "UTF-8")
+
 
 # Additional Data
 oil <- readRDS("data/scores/oilgasVis.rds")
@@ -514,13 +516,36 @@ ui <- fluidPage(
     tabPanel("Recursos adicionales"
              ,h4("Materiales de apoyo para Colorado EnviroScreen")
              ,p(
-               "Guía básica del usuario (inglés |español)"
+               "Guía básica del usuario ("
+               ,tags$a(
+                 href = "https://drive.google.com/file/d/1aXfZiJtv2-6lfSQeQYfMupIICEXwidiC/view?usp=sharing"
+                 ,tags$em("inglés")
+                 , target = "_blank"
+               )
+               ," | "
+               ,tags$a(
+                 href = "https://drive.google.com/file/d/1aXfZiJtv2-6lfSQeQYfMupIICEXwidiC/view?usp=sharing"
+                 ,tags$em("español")
+                 , target = "_blank"
+               )
+               ,")"
                ,br()
                ,br()
-               ,"Guía técnica del usuario (solo disponible en inglés, por el momento)."
+               ,"Guía técnica del usuario (solo disponible en " 
+               ,tags$a(
+                 href = "https://drive.google.com/file/d/1aXfZiJtv2-6lfSQeQYfMupIICEXwidiC/view?usp=sharing"
+                 ,tags$em("inglés")
+                 , target = "_blank"
+               )
+               ," por el momento)."
                ,br()
                ,br()
-               ,"Resumen ejecutivo de participación comunitaria"
+               ,tags$a(
+                 href = "https://drive.google.com/file/d/1aXfZiJtv2-6lfSQeQYfMupIICEXwidiC/view?usp=sharing"
+                 ,tags$em("Resumen")
+                 , target = "_blank"
+               )
+               ," ejecutivo de participación comunitaria"
              )
              ,h4("Programas del CDPHE")
              ,p(
@@ -805,7 +830,7 @@ ui <- fluidPage(
                                ),
                                "Vulnerabilidad climática" = c("Sequía",
                                                               "Días de calor extremo",
-                                                              "Inundación (plaicies aluviales)",
+                                                              "Inundación (planicies aluviales)",
                                                               "Riesgo de incendios forestales"
                                ),
                                "Poblaciones sensibles" = c("Tasa de hospitalización por asma",
@@ -934,7 +959,7 @@ ui <- fluidPage(
     ")."
                    ),
     p(class = "href2",
-      "El código y repositorios de los datos están disponibles aquí ",
+      "El código y repositorios de los datos están disponibles ",
       tags$a(href= "https://geospatialcentroid.github.io/Colorado_EnviroScreen/",
              tags$span(style="color:white","aquí"), target = "_blank")
     )
@@ -1723,8 +1748,8 @@ server <- function(input, output,session) {
                 ,"Nombre del condado"
                 ,"Riesgo de incendios forestales"
                 ,"Percentil de riesgo de incendios forestales"
-                ,"Inundación (plaicies aluviales)"
-                ,"Percentil de inundación (plaicies aluviales)"
+                ,"Inundación (planicies aluviales)"
+                ,"Percentil de inundación (planicies aluviales)"
                 ,"Sequía"
                 ,"Percentil de sequía"
                 ,"Días de calor extremo"
