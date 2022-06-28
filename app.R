@@ -387,7 +387,9 @@ ui <- fluidPage(
     )
   ) ,
   fluidRow(
-    p("Colorado EnviroScreen:"),
+    p("Colorado EnviroScreen:")
+    ),
+  fluidRow(
     p(
       tags$ul(
         tags$li("identifica las áreas en las que hay y ha habido inequidades ambientales;"),
@@ -397,7 +399,9 @@ ui <- fluidPage(
     )
   ),
   fluidRow(
-    p("El propósito de Colorado EnviroScreen es:"),
+    p("El propósito de Colorado EnviroScreen es:")
+    ),
+  fluidRow(
     p(
       tags$ul(
         tags$li("ayudar a los usuarios a que intercedan para recibir fondos, intervenciones y cambios en las políticas con el fin de evitar, disminuir y mitigar los riesgos para la salud ambiental;"),
@@ -1150,7 +1154,7 @@ ui <- fluidPage(
            DT::dataTableOutput("tableAll")
   ),
 
-  # download table option  --------------------------------------------------
+    # download table option  --------------------------------------------------
   fluidRow(
     column(3,
            offset = 1,
