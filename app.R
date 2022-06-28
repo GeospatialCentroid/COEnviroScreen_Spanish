@@ -1175,7 +1175,7 @@ ui <- fluidPage(
 
   fluidRow( class = "titleElement",
             column(4,
-                   h3("Additional Resources"),
+                   h3("Recursos adicionales"),
                    p(class = "href2",
                      "Guía básica del usuario (",
     tags$a(href = "https://drive.google.com/file/d/1iytdPG5iK2VBNpIy8k6oT6lU6-QKMLOa/view?usp=sharing",
@@ -1189,6 +1189,11 @@ ui <- fluidPage(
       "El código y repositorios de los datos están disponibles ",
       tags$a(href= "https://geospatialcentroid.github.io/Colorado_EnviroScreen/",
              tags$span(style="color:white","aquí"), target = "_blank")
+    ),
+    p(class = "href2",
+      "Descargar ",
+      tags$a(href= "https://data-cdphe.opendata.arcgis.com/search?collection=Dataset&tags=environmental%20justice",
+             tags$span(style="color:white","aquí"), target = "_blank"), "los datos de EnviroScreen para el sistema de información geográfica (GIS)."
     )
             ),
 
