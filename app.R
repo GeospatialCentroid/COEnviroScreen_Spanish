@@ -776,11 +776,11 @@ ui <- fluidPage(
                ,br()
                ,br()
                ,tags$a(
-                 href = "https://drive.google.com/file/d/1aXfZiJtv2-6lfSQeQYfMupIICEXwidiC/view?usp=sharing"
-                 ,tags$em("Resumen")
+                 href = "https://drive.google.com/file/d/1aaRCQA0SpKlU-ynz7RYVkmeWayfEncgB/view?usp=sharing"
+                 ,tags$em("Reporte de participación comunitaria ")
                  , target = "_blank"
                )
-               ," ejecutivo de participación comunitaria"
+               ,"(solo disponible en inglés, por el momento)"
              )
              ,h4("Programas del CDPHE")
              ,p(
@@ -889,14 +889,6 @@ ui <- fluidPage(
                )
              )
              ,p(
-               "Departamento de Transporte de Colorado"
-               ,tags$a(
-                 href = "https://www.codot.gov/"
-                 ,tags$em("https://www.codot.gov/")
-                 , target = "_blank"
-               )
-             )
-             ,p(
                "Portal de mapeo de los peligros y riesgos de Colorado"
                ,tags$a(
                  href = "https://coloradohazardmapping.com/"
@@ -904,7 +896,7 @@ ui <- fluidPage(
                  , target = "_blank"
                )
              )
-             ,h4("Environmental justice at federal programs and agencies")
+             ,h4("Justicia ambiental en los programas y agencias del gobierno federal")
              ,p(
                "Agencia de Protección Ambiental de Estados Unidos (EPA)"
                ,tags$a(
@@ -945,7 +937,7 @@ ui <- fluidPage(
                  , target = "_blank"
                )
              )
-             ,h4("Real-time air monitoring")
+             ,h4("Monitoreo de la calidad del aire en tiempo real")
              ,p(
                "Programa Love My Air de Denver "
                ,tags$a(
@@ -1141,7 +1133,7 @@ ui <- fluidPage(
   # show reactive table -----------------------------------------------------
   # table showing the results
   fluidRow(class = "sectionTitle",
-           h2("EnviroScreen Score Data"),
+           h2("Datos del puntaje de EnviroScreen"),
            p("Use las pestañas que están encima de la tabla para filtrar los elementos del puntaje de Colorado EnviroScreen.  Seleccione una fila de la tabla y luego presione el botón anaranjado `Resaltar selección en el mapa` al pie de la tabla para ver la ubicación en el mapa."),
 
   ),
@@ -1321,8 +1313,8 @@ server <- function(input, output,session) {
     addLegend(
       "topright",
       colors = colorRamp,
-      title = "Valores estimados.",
-      labels = c(" Mayor carga", "", "", "", " Menos carga"),
+      title = "Valores estimados",
+      labels = c(" Mayor carga", "", "", "", " Menor carga"),
       opacity = 1,
       layerId = "firstLegend",
       group = "Puntaje del indicador",
