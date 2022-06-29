@@ -15,7 +15,6 @@ library(shinyWidgets)
 library(readr)
 
 
-
 # source helpers ----------------------------------------------------------
 lapply(list.files(path = "src",recursive = TRUE, full.names = TRUE), source)
 
@@ -415,9 +414,12 @@ ui <- fluidPage(
       tags$a(href = "https://cdphe.colorado.gov/environmental-justice", "fomentar la justicia ambiental", target = "_blank"),
       ", ",
       tags$a(href = "https://cdphe.colorado.gov/environment/toxicology-and-environmental-epidemiology", "comprender la relación que existe entre el medio ambiente y nuestra salud", target = "_blank"),
-      " , and ",
+      " , y ",
       tags$a(href = "https://cdphe.colorado.gov/air-pollution/climate-change#equity", "fomentar la equidad climática.", target = "_blank"),
     )),
+  fluidRow(
+    p("Desplácese hacia abajo para aprender a usar Colorado EnviroScreen.")
+  ),
 
   # # description of use ------------------------------------------------------
   fluidRow(class = "sectionTitle",
@@ -461,11 +463,12 @@ ui <- fluidPage(
                title = "Map Elements",
                height="auto"
              )
-             ,tags$h3("Siga estos pasos para usar el mapa.")
+             ,tags$h3("Siga estos pasos para usar el mapa o ", 
+                      tags$a(href = "https://drive.google.com/file/d/1FMFjb1MGDzoERCk9apkkgB7jmC9Wm9Nk/view?usp=sharing", "mire este video.", target = "_blank"))
              ,tags$h4("Paso 1: Elija la configuración del mapa.")
              ,p(
                tags$strong("En primer lugar, elija la “escala geográfica” que desea visualizar.")
-               ,"el menú desplegable para ver el mapa a nivel de condados, áreas censales o grupos de manzanas censales. La división por condados es la escala más grande y el grupo de manzanas censales es la escala más pequeña. Continúe con el"
+               ,"Use el menú desplegable para ver el mapa a nivel de condados, áreas censales o grupos de manzanas censales. La división por condados es la escala más grande y el grupo de manzanas censales es la escala más pequeña. Continúe con el"
                ,tags$em(" “Indicador” del mapa.")
              )
              ,br()
@@ -476,7 +479,7 @@ ui <- fluidPage(
              ,br()
              ,p(
                tags$strong("En tercer lugar, seleccione si desea visualizar el indicador “Medida o %”.")
-               ," lija cómo desea ver la capa del mapa seleccionada. Valor medido muestra la medida real de la fuente de datos (p. ej., microgramos de contaminantes, casos de una enfermedad, etc.). La medida tiene mayor relevancia para las capas individuales de datos, como el ozono o las hospitalizaciones por asma. Un percentil es un rango o categoría. El número representa el porcentaje de lugares de Colorado cuyo rango es equivalente o está por debajo del rango del área seleccionada. Por ejemplo, un percentil de 80 en EnviroScreen significa que el 80 % de las áreas de Colorado tienen menos probabilidades de verse afectadas por injusticias de salud ambiental que el área en cuestión y que el 20 % de las áreas de Colorado tienen más probabilidades de verse afectadas por injusticias de salud ambiental.")
+               ," Elija cómo desea ver la capa del mapa seleccionada. Valor medido muestra la medida real de la fuente de datos (p. ej., microgramos de contaminantes, casos de una enfermedad, etc.). La medida tiene mayor relevancia para las capas individuales de datos, como el ozono o las hospitalizaciones por asma. Un percentil es un rango o categoría. El número representa el porcentaje de lugares de Colorado cuyo rango es equivalente o está por debajo del rango del área seleccionada. Por ejemplo, un percentil de 80 en EnviroScreen significa que el 80 % de las áreas de Colorado tienen menos probabilidades de verse afectadas por injusticias de salud ambiental que el área en cuestión y que el 20 % de las áreas de Colorado tienen más probabilidades de verse afectadas por injusticias de salud ambiental.")
              ,br()
              ,p(
                "Una vez que haya seleccionado sus opciones, haga clic en "
@@ -508,9 +511,11 @@ ui <- fluidPage(
                ,br()
                ,"Use el icono a la izquierda del mapa para seleccionar el mapa base o agregar capas y personalizar la vista del mapa. "
                ,br()
+               ,br()
                ,"Las opciones del mapa base permiten elegir distintos mapas de fondo (p.ej., claro, oscuro o con calles y lugares de interés). Las opciones del mapa base no influyen en los percentiles ni en las medidas que se presentan en la herramienta."
                ,br()
-               ,"Las capas adicionales proporcionan información sobre las zonas que producen petróleo y gas, tienen centrales a carbón, son comunidades rurales, han sido designadas por el gobierno federal como comunidades de Justice40 o cumplen con la definición de comunidad afectada de manera desproporcionada del Departamento de Salud Pública y Medio Ambiente del CDPHE. Las capas adicionales solo ofrecen más contexto. Las capas adicionales no forman parte de los métodos de EnviroScreen y no influyen en los percentiles o medidas que se presentan en la herramienta."
+               ,br()
+               ,"Las capas adicionales proporcionan información sobre las zonas que producen petróleo y gas, tienen centrales a carbón, son comunidades rurales, han sido designadas por el gobierno federal como comunidades de Justice40 o cumplen con la definición de comunidad afectada de manera desproporcionada del Departamento de Salud Pública y Medio Ambiente (CDPHE). Las capas adicionales solo ofrecen más contexto. Las capas adicionales no forman parte de los métodos de EnviroScreen y no influyen en los percentiles o medidas que se presentan en la herramienta."
              ),
              tags$h4("Paso 3: Explore los datos de manera diferente."),
              p(
@@ -526,11 +531,11 @@ ui <- fluidPage(
              p(
                "La gráfica de barras que aparece a la derecha del mapa muestra el puntaje total de EnviroScreen. Las gráficas de barras que están debajo del mapa muestran el puntaje de los cinco componentes que conforman el puntaje total. Estas gráficas indican si un área se ve más o menos afectada que otras partes del estado para cada categoría."
                ,br()
+               ,br()
                ,tags$strong("La altura de las barras")
                ," (eje y) representa la cantidad de zonas de Colorado cuya carga está dentro del mismo rango que el área seleccionada."
                ,br()
                ,br()
-               , "The"
                ,tags$strong(" La posición horizontal")
                ,"de las barras (eje x) representa la categoría a la que pertenece la carga (de acuerdo con el rango percentil). Cuanto más hacia la izquierda está la barra, menor es la carga de esa zona en comparación con el resto de Colorado. Cuanto más hacia la derecha está la barra, mayor es la carga de esa zona en comparación con el resto de Colorado."
                ,br()
@@ -564,7 +569,7 @@ ui <- fluidPage(
                ,br()
                ,"La tabla muestra diez filas por omisión. Para"
                , tags$strong(" ver más filas")
-               , "en pantalla, haga clic en la casilla “Mostrar xx filas” que se encuentra en la parte superior izquierda de la tabla (máximo de 100 filas). Si desea ver los datos de todas las divisiones geográficas, use la barra que aparece en la parte inferior derecha para trasladarse entre todas las páginas disponibles de la tabla."
+               , "en pantalla, haga clic en la casilla “Mostrar xx filas” (Show xx entries) que se encuentra en la parte superior izquierda de la tabla (máximo de 100 filas). Si desea ver los datos de todas las divisiones geográficas, use la barra que aparece en la parte inferior derecha para trasladarse entre todas las páginas disponibles de la tabla."
                ,br()
                ,br()
                ,"También hay un"
@@ -577,7 +582,8 @@ ui <- fluidPage(
                ,"que están organizadas de acuerdo con los componentes del puntaje."
                ,br()
                ,br()
-               ,"También se puede hacer clic en los encabezados de las columnas para clasificar los datos de acuerdo con su valor, de mayor a menor o de menor a mayor."
+               ,"También se puede hacer clic en los encabezados de las columnas para "
+               ,tags$strong("clasificar los datos de acuerdo con su valor, de mayor a menor o de menor a mayor.")
                ,br()
                ,br()
                ,"El área que esté seleccionada en el mapa aparecerá resaltada en la tabla de datos, debajo de las gráficas. Escoja una o más filas de la tabla para resaltar esa área en el mapa. Por ejemplo, ordene los datos de la tabla para buscar las áreas que tienen el puntaje de vulnerabilidad climática más alto, seleccione las filas de la tabla y luego haga clic en “Resaltar selección en el mapa”. Se resaltarán en el mapa las zonas que correspondan a las filas que se hayan seleccionado en la tabla."
@@ -712,11 +718,11 @@ ui <- fluidPage(
              )
              ,tags$strong("Justice40")
              ,p(
-               "La Casa Blanca lanzó la Iniciativa Justice40 a principios de 2022. La meta de la Iniciativa Justice40 es que se destine el 40 por ciento del total de los beneficios de las inversiones del gobierno federal en siete áreas clave a las comunidades desfavorecidas. Estas siete áreas clave son las siguientes: cambio climático, energía limpia y eficiencia energética, tráfico limpio, vivienda asequible y sostenible, formación y desarrollo de la fuerza laboral, descontaminación y disminución de la contaminación histórica y desarrollo de una infraestructura de importancia clave para evitar la contaminación del agua. De acuerdo con la definición de la Iniciativa Justice40, se considera que una comunidad es “desfavorecida” si uno o más indicadores ambientales o climáticos del área censal se encuentran por encima del umbral y los indicadores socioeconómicos del área censal están por encima del umbral. Esta definición no forma parte de los componentes ni del puntaje de EnviroScreen y no influye en los resultados que se presentan en el mapa, las gráficas o la tabla."
+               "La Casa Blanca lanzó la Iniciativa Justice40 en 2021. La meta de la Iniciativa Justice40 es que se destine el 40 por ciento del total de los beneficios de las inversiones del gobierno federal en siete áreas clave a las comunidades desfavorecidas. Estas siete áreas clave son las siguientes: cambio climático, energía limpia y eficiencia energética, tráfico limpio, vivienda asequible y sostenible, formación y desarrollo de la fuerza laboral, descontaminación y disminución de la contaminación histórica y desarrollo de una infraestructura de importancia clave para evitar la contaminación del agua. De acuerdo con la definición de la Iniciativa Justice40, se considera que una comunidad es “desfavorecida” si uno o más indicadores ambientales o climáticos del área censal se encuentran por encima del umbral y los indicadores socioeconómicos del área censal están por encima del umbral. Esta definición no forma parte de los componentes ni del puntaje de EnviroScreen y no influye en los resultados que se presentan en el mapa, las gráficas o la tabla."
              )
-             ,tags$strong("Story Maps")
+             ,tags$strong("Historias en el mapa")
              ,p(
-               "A StoryMap is an immersive story that combines text, interactive maps, and other multimedia content. In Colorado EnviroScreen, the StoryMaps highlight life experiences that are complementary to the data included in the tool but importantly, they do not contribute to the EnviroScreen score."
+               "Estas historias proporcionan una experiencia de inmersión al combinar texto, mapas interactivos y otro contenido multimedia. Las historias de Colorado EnviroScreen ponen de relieve vivencias que complementan los datos de la herramienta, pero cabe señalar que no forman parte del puntaje de EnviroScreen."
              )
     ),
     tabPanel("Creación de la herramienta",
@@ -771,11 +777,11 @@ ui <- fluidPage(
                ,br()
                ,br()
                ,tags$a(
-                 href = "https://drive.google.com/file/d/1aXfZiJtv2-6lfSQeQYfMupIICEXwidiC/view?usp=sharing"
-                 ,tags$em("Resumen")
+                 href = "https://drive.google.com/file/d/1aaRCQA0SpKlU-ynz7RYVkmeWayfEncgB/view?usp=sharing"
+                 ,tags$em("Reporte de participación comunitaria ")
                  , target = "_blank"
                )
-               ," ejecutivo de participación comunitaria"
+               ,"(solo disponible en inglés, por el momento)"
              )
              ,h4("Programas del CDPHE")
              ,p(
@@ -884,14 +890,6 @@ ui <- fluidPage(
                )
              )
              ,p(
-               "Departamento de Transporte de Colorado"
-               ,tags$a(
-                 href = "https://www.codot.gov/"
-                 ,tags$em("https://www.codot.gov/")
-                 , target = "_blank"
-               )
-             )
-             ,p(
                "Portal de mapeo de los peligros y riesgos de Colorado"
                ,tags$a(
                  href = "https://coloradohazardmapping.com/"
@@ -899,7 +897,7 @@ ui <- fluidPage(
                  , target = "_blank"
                )
              )
-             ,h4("Environmental justice at federal programs and agencies")
+             ,h4("Justicia ambiental en los programas y agencias del gobierno federal")
              ,p(
                "Agencia de Protección Ambiental de Estados Unidos (EPA)"
                ,tags$a(
@@ -940,7 +938,7 @@ ui <- fluidPage(
                  , target = "_blank"
                )
              )
-             ,h4("Real-time air monitoring")
+             ,h4("Monitoreo de la calidad del aire en tiempo real")
              ,p(
                "Programa Love My Air de Denver "
                ,tags$a(
@@ -990,12 +988,12 @@ ui <- fluidPage(
                )
              )
     ),
-    tabPanel("Guías para los usuarios",
+    tabPanel("Preguntas frecuentes",
              br(),
              p(
                tags$a(
-                 href = "https://docs.google.com/document/d/1_GEjGbOd3CmXwZu09QJ9oO4ZI8hqXtFwZAAeTsNV5lQ/edit?usp=sharing"
-                 ,tags$em("Guías para los usuarios")
+                 href = "https://docs.google.com/document/d/1tPOWcrS2IClFCyW4-ZE8Lmd2PV_CRGDR4s6qC7A7XPQ/edit?usp=sharing"
+                 ,tags$em("Preguntas frecuentes")
                  , target = "_blank"
                )
              )
@@ -1136,7 +1134,7 @@ ui <- fluidPage(
   # show reactive table -----------------------------------------------------
   # table showing the results
   fluidRow(class = "sectionTitle",
-           h2("EnviroScreen Score Data"),
+           h2("Datos del puntaje de EnviroScreen"),
            p("Use las pestañas que están encima de la tabla para filtrar los elementos del puntaje de Colorado EnviroScreen.  Seleccione una fila de la tabla y luego presione el botón anaranjado `Resaltar selección en el mapa` al pie de la tabla para ver la ubicación en el mapa."),
 
   ),
@@ -1178,7 +1176,7 @@ ui <- fluidPage(
 
   fluidRow( class = "titleElement",
             column(4,
-                   h3("Additional Resources"),
+                   h3("Recursos adicionales"),
                    p(class = "href2",
                      "Guía básica del usuario (",
     tags$a(href = "https://drive.google.com/file/d/1iytdPG5iK2VBNpIy8k6oT6lU6-QKMLOa/view?usp=sharing",
@@ -1192,6 +1190,11 @@ ui <- fluidPage(
       "El código y repositorios de los datos están disponibles ",
       tags$a(href= "https://geospatialcentroid.github.io/Colorado_EnviroScreen/",
              tags$span(style="color:white","aquí"), target = "_blank")
+    ),
+    p(class = "href2",
+      "Descargar ",
+      tags$a(href= "https://data-cdphe.opendata.arcgis.com/search?collection=Dataset&tags=environmental%20justice",
+             tags$span(style="color:white","aquí"), target = "_blank"), "los datos de EnviroScreen para el sistema de información geográfica (GIS)."
     )
             ),
 
@@ -1316,8 +1319,8 @@ server <- function(input, output,session) {
     addLegend(
       "topright",
       colors = colorRamp,
-      title = "Valores estimados.",
-      labels = c(" Mayor carga", "", "", "", " Menos carga"),
+      title = "Valores estimados",
+      labels = c(" Mayor carga", "", "", "", " Menor carga"),
       opacity = 1,
       layerId = "firstLegend",
       group = "Puntaje del indicador",
