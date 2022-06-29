@@ -26,8 +26,8 @@ envoData <- readRDS("data/scores/allScores4spanish.rds")%>%
   dplyr::select(-"GEOID3")
 
 names(envoData)<- c(
-  "GEOID"
-  ,"Nombre del condado"
+  "Nombre del condado"
+  ,"GEOID"
   ,"Puntaje de Colorado EnviroScreen"
   ,"Percentil del puntaje de Colorado EnviroScreen"
   ,"Contaminación y carga climática"
@@ -50,7 +50,7 @@ names(envoData)<- c(
   ,"Percentil de ozono"
   ,"Contaminación por partículas finas"
   ,"Percentil de contaminación por partículas finas"
-  ,"Riesgo de exposición al plomok"
+  ,"Riesgo de exposición al plomo"
   ,"Percentil de riesgo de exposición al plomo"
   ,"Material particulado (PM) de diésel"
   ,"Percentil de material particulado (PM) de diésel"
@@ -90,8 +90,8 @@ names(envoData)<- c(
   ,"Percentil de población por debajo de 5 años"
   ,"Población por encima de 64 años"
   ,"Percentil de población por encima de 64 años"
-  ,"Enfermedades cardiacas en adultos"
-  ,"Percentil de enfermedades cardiacas en adultos"
+  ,"Enfermedades cardíacas en adultos"
+  ,"Percentil de enfermedades cardíacas en adultos"
   ,"Tasa de hospitalización por asma"
   ,"Percentil de tasa de hospitalización por asma"
   ,"Expectativa de vida"
@@ -110,8 +110,8 @@ names(envoData)<- c(
   ,"Percentil del porcentaje que no completaron los estudios de secundaria"
   ,"Porcentaje de bajos ingresos"
   ,"Percentil del porcentaje de bajos ingresos"
-  ,"Porcentaje de aislamiento lingüístico"
-  ,"Percentil del porcentaje de aislamiento lingüístico"
+  ,"Porcentaje de aislamiento"
+  ,"Percentil del porcentaje de aislamiento"
   ,"Porcentaje de discapacidades"
   ,"Percentil del porcentaje de discapacidades"
   ,"Sobrecarga por gastos de vivienda" 
@@ -127,6 +127,7 @@ names(envoData)<- c(
   ,"visParam"
 )
 
+envoData$area[envoData$area == "Ã\u0081rea censal"] <- "Área censal"
 
 
 # Additional Data
@@ -141,7 +142,7 @@ descriptors <- read_csv("data/descriptions/indicatorDesc.csv")%>%
 
 justice40 <- readRDS("data/scores/justice40.rds") %>%
   dplyr::mutate(popup = paste0(
-    "Census Tract ", GEOID ," in ", County_Name," County."
+    "Área censal ", GEOID ," in ", County_Name," County."
     ,br()
     ,"Se definió como área desfavorecida según un total de ", Total.threshold.criteria.exceeded," indicadores."
     ,br()
@@ -330,7 +331,7 @@ indicators <- sf::st_drop_geometry(envoData) %>%
 #hist data
 histData <- envoData %>%
   sf::st_drop_geometry()%>%
-  dplyr::filter(area == "County")%>%
+  dplyr::filter(area == "Condado")%>%
   dplyr::select(
     "GEOID"
     ,"Puntaje de Colorado EnviroScreen"
@@ -343,7 +344,7 @@ histData <- envoData %>%
     ,"Características demográficas"
   )
 
-# set empty parameter for histogram funciton
+# set empty parameter for histogram function
 ## set to non GEOID number for the histogram generate on loading.
 geoidMap <- "100"
 
@@ -1051,7 +1052,7 @@ ui <- fluidPage(
                                ),
                                "Efectos ambientales" = c("Arroyos y ríos deteriorados",
                                                          "Proximidad a instalaciones de residuos peligrosos",
-                                                         "Proximidad a ubicaciones de minas",
+                                                         "Proximidad a minas",
                                                          "Proximidad a los sitios de la Lista Nacional de Prioridades",
                                                          "Proximidad a petróleo y gas",
                                                          "Proximidad a los sitios del Plan de Gestión de Riesgos",
@@ -1065,7 +1066,7 @@ ui <- fluidPage(
                                "Poblaciones sensibles" = c("Tasa de hospitalización por asma",
                                                            "Prevalencia de cáncer",
                                                            "Prevalencia de diabetes",
-                                                           "Enfermedades cardiacas en adultos",
+                                                           "Enfermedades cardíacas en adultos",
                                                            "Expectativa de vida",
                                                            "Bajo peso al nacer",
                                                            "Indicador de salud mental",
@@ -1075,7 +1076,7 @@ ui <- fluidPage(
                                "Características demográficas" = c("Sobrecarga por gastos de vivienda",
                                                                   "Porcentaje de discapacidades",
                                                                   "Porcentaje que no completaron los estudios de secundaria",
-                                                                  "Porcentaje de aislamiento lingüístico",
+                                                                  "Porcentaje de aislamiento",
                                                                   "Porcentaje de bajos ingresos",
                                                                   "Porcentaje de personas de color"
                                )
@@ -1935,7 +1936,7 @@ server <- function(input, output,session) {
                 ,"Percentil de ozono"
                 ,"Contaminación por partículas finas"
                 ,"Percentil de contaminación por partículas finas"
-                ,"Riesgo de exposición al plomok"
+                ,"Riesgo de exposición al plomo"
                 ,"Percentil de riesgo de exposición al plomo"
                 ,"Material particulado (PM) de diésel"
                 ,"Percentil de material particulado (PM) de diésel"
@@ -1993,8 +1994,8 @@ server <- function(input, output,session) {
                 ,"Percentil de población por debajo de 5 años"
                 ,"Población por encima de 64 años"
                 ,"Percentil de población por encima de 64 años"
-                ,"Enfermedades cardiacas en adultos"
-                ,"Percentil de enfermedades cardiacas en adultos"
+                ,"Enfermedades cardíacas en adultos"
+                ,"Percentil de enfermedades cardíacas en adultos"
                 ,"Tasa de hospitalización por asma"
                 ,"Percentil de tasa de hospitalización por asma"
                 ,"Expectativa de vida"
@@ -2019,8 +2020,8 @@ server <- function(input, output,session) {
                 ,"Percentil del porcentaje que no completaron los estudios de secundaria"
                 ,"Porcentaje de bajos ingresos"
                 ,"Percentil del porcentaje de bajos ingresos"
-                ,"Porcentaje de aislamiento lingüístico"
-                ,"Percentil del porcentaje de aislamiento lingüístico"
+                ,"Porcentaje de aislamiento"
+                ,"Percentil del porcentaje de aislamiento"
                 ,"Porcentaje de discapacidades"
                 ,"Percentil del porcentaje de discapacidades"
                 ,"Sobrecarga por gastos de vivienda"
@@ -2108,6 +2109,10 @@ server <- function(input, output,session) {
                       ,"Indicador de descargas de aguas residuales"
                       ,"Indicador de salud mental"
                       ,"Porcentaje de discapacidades"
+                      ,'Porcentaje que no completaron los estudios de secundaria'
+                      ,"Porcentaje de aislamiento"
+                      ,"Porcentaje de bajos ingresos"
+                      ,"Porcentaje de personas de color"
         )){
           indicator2 <- paste0("Percentil del ", t1,t2)
         }else{
