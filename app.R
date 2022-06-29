@@ -383,7 +383,7 @@ ui <- fluidPage(
     p(HTML("</br><a href='#map'>Saltar al mapa</a>")),
     p("Colorado EnviroScreen es un mapa interactivo de justicia ambiental y una herramienta de evaluación de la salud en Colorado. Un equipo de Colorado State University creó esta herramienta para el Departamento de Salud Pública y Medio Ambiente de Colorado (CDPHE). Se lanzó la versión 1.0 de Colorado EnviroScreen el 28 de junio de 2022. Para obtener más información sobre Colorado EnviroScreen, diríjase a la ",
       tags$a(href = "https://cdphe.colorado.gov/enviroscreen", "página web de Colorado EnviroScreen ", target = "_blank"),
-      "del CDPHE. Puede enviar sus comentarios sobre Colorado EnviroScreen por correo electrónico al CDPHE: cdphe_ej@state.co.us"
+      "del CDPHE. Puede enviar sus comentarios sobre Colorado EnviroScreen por correo electrónico al CDPHE: cdphe_ej@state.co.us."
     )
   ) ,
   fluidRow(
@@ -411,10 +411,9 @@ ui <- fluidPage(
   ),
   fluidRow(
     p("Haga clic aquí para obtener más información sobre el trabajo que lleva a cabo el CDPHE con el fin de ",
-      tags$a(href = "https://cdphe.colorado.gov/environmental-justice", "fomentar la justicia ambiental", target = "_blank"),
-      ", ",
-      tags$a(href = "https://cdphe.colorado.gov/environment/toxicology-and-environmental-epidemiology", "comprender la relación que existe entre el medio ambiente y nuestra salud", target = "_blank"),
-      " , y ",
+      tags$a(href = "https://cdphe.colorado.gov/environmental-justice", "fomentar la justicia ambiental,", target = "_blank"),
+      tags$a(href = "https://cdphe.colorado.gov/environment/toxicology-and-environmental-epidemiology", "comprender la relación que existe entre el medio ambiente y nuestra salud,", target = "_blank"),
+      "y ",
       tags$a(href = "https://cdphe.colorado.gov/air-pollution/climate-change#equity", "fomentar la equidad climática.", target = "_blank"),
     )),
   fluidRow(
@@ -1178,18 +1177,17 @@ ui <- fluidPage(
             column(4,
                    h3("Recursos adicionales"),
                    p(class = "href2",
-                     "Guía básica del usuario (",
+                     "Guía básica del usuario ",
     tags$a(href = "https://drive.google.com/file/d/1iytdPG5iK2VBNpIy8k6oT6lU6-QKMLOa/view?usp=sharing",
-           tags$span(style="color:white","inglés"), target = "_blank"),
-    "and ",
+           tags$span(style="color:white","(inglés"), target = "_blank"),
+    "y",
     tags$a(href = "https://drive.google.com/file/d/17rQ90fNt3DF-0PbySpGjo2tiy9AmDiCc/view?usp=sharing",
-           tags$span(style="color:white","español"), target = "_blank"),
-    ")."
+           tags$span(style="color:white","español)"), target = "_blank"),
                    ),
     p(class = "href2",
       "El código y repositorios de los datos están disponibles ",
       tags$a(href= "https://geospatialcentroid.github.io/Colorado_EnviroScreen/",
-             tags$span(style="color:white","aquí"), target = "_blank")
+             tags$span(style="color:white","aquí."), target = "_blank")
     ),
     p(class = "href2",
       "Descargar ",
