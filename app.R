@@ -109,8 +109,8 @@ names(envoData)<- c(
   ,"Percentil del porcentaje que no completaron los estudios de secundaria"
   ,"Porcentaje de bajos ingresos"
   ,"Percentil del porcentaje de bajos ingresos"
-  ,"Porcentaje de aislamiento"
-  ,"Percentil del porcentaje de aislamiento"
+  ,"Porcentaje de aislamiento lingüístico"
+  ,"Percentil del porcentaje de aislamiento lingüístico"
   ,"Porcentaje de discapacidades"
   ,"Percentil del porcentaje de discapacidades"
   ,"Sobrecarga por gastos de vivienda" 
@@ -1073,7 +1073,7 @@ ui <- fluidPage(
                                "Características demográficas" = c("Sobrecarga por gastos de vivienda",
                                                                   "Porcentaje de discapacidades",
                                                                   "Porcentaje que no completaron los estudios de secundaria",
-                                                                  "Porcentaje de aislamiento",
+                                                                  "Porcentaje de aislamiento lingüístico",
                                                                   "Porcentaje de bajos ingresos",
                                                                   "Porcentaje de personas de color"
                                )
@@ -2021,8 +2021,8 @@ server <- function(input, output,session) {
                 ,"Percentil del porcentaje de discapacidades"
                 ,"Porcentaje que no completaron los estudios de secundaria"
                 ,"Percentil del porcentaje que no completaron los estudios de secundaria"
-                ,"Porcentaje de aislamiento"
-                ,"Percentil del porcentaje de aislamiento"
+                ,"Porcentaje de aislamiento lingüístico"
+                ,"Percentil del porcentaje de aislamiento lingüístico"
                 ,"Porcentaje de bajos ingresos"
                 ,"Percentil del porcentaje de bajos ingresos"
                 ,"Porcentaje de personas de color"
@@ -2111,7 +2111,7 @@ server <- function(input, output,session) {
                       ,"Indicador de salud mental"
                       ,"Porcentaje de discapacidades"
                       ,'Porcentaje que no completaron los estudios de secundaria'
-                      ,"Porcentaje de aislamiento"
+                      ,"Porcentaje de aislamiento lingüístico"
                       ,"Porcentaje de bajos ingresos"
                       ,"Porcentaje de personas de color"
         )){
