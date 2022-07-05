@@ -109,8 +109,8 @@ names(envoData)<- c(
   ,"Percentil del porcentaje que no completaron los estudios de secundaria"
   ,"Porcentaje de bajos ingresos"
   ,"Percentil del porcentaje de bajos ingresos"
-  ,"Porcentaje de aislamiento"
-  ,"Percentil del porcentaje de aislamiento"
+  ,"Porcentaje de aislamiento lingüístico"
+  ,"Percentil del porcentaje de aislamiento lingüístico"
   ,"Porcentaje de discapacidades"
   ,"Percentil del porcentaje de discapacidades"
   ,"Sobrecarga por gastos de vivienda" 
@@ -384,7 +384,7 @@ ui <- fluidPage(
     p("Colorado EnviroScreen es un mapa interactivo de justicia ambiental y una herramienta de evaluación de la salud en Colorado. Un equipo de Colorado State University creó esta herramienta para el Departamento de Salud Pública y Medio Ambiente de Colorado (CDPHE). Se lanzó la versión 1.0 de Colorado EnviroScreen el 28 de junio de 2022. Para obtener más información sobre Colorado EnviroScreen, diríjase a la ",
       tags$a(href = "https://cdphe.colorado.gov/enviroscreen", "página web de Colorado EnviroScreen ", target = "_blank"),
       "del CDPHE. Puede enviar sus comentarios sobre Colorado EnviroScreen por correo electrónico al CDPHE: "
-      ,tags$a(href = "mailto: cdphe_ej@state.co.us","cdphe_ej@state.co.us.")
+        ,tags$a(href = "mailto: cdphe_ej@state.co.us","cdphe_ej@state.co.us.")
     )
   ) ,
   fluidRow(
@@ -412,10 +412,9 @@ ui <- fluidPage(
   ),
   fluidRow(
     p("Haga clic aquí para obtener más información sobre el trabajo que lleva a cabo el CDPHE con el fin de ",
-      tags$a(href = "https://cdphe.colorado.gov/environmental-justice", "fomentar la justicia ambiental", target = "_blank"),
-      ", ",
-      tags$a(href = "https://cdphe.colorado.gov/environment/toxicology-and-environmental-epidemiology", "comprender la relación que existe entre el medio ambiente y nuestra salud", target = "_blank"),
-      " , y ",
+      tags$a(href = "https://cdphe.colorado.gov/environmental-justice", "fomentar la justicia ambiental,", target = "_blank"),
+      tags$a(href = "https://cdphe.colorado.gov/environment/toxicology-and-environmental-epidemiology", "comprender la relación que existe entre el medio ambiente y nuestra salud,", target = "_blank"),
+      "y ",
       tags$a(href = "https://cdphe.colorado.gov/air-pollution/climate-change#equity", "fomentar la equidad climática.", target = "_blank"),
     )),
   fluidRow(
@@ -762,7 +761,7 @@ ui <- fluidPage(
                )
                ," | "
                ,tags$a(
-                 href = "https://drive.google.com/file/d/1aXfZiJtv2-6lfSQeQYfMupIICEXwidiC/view?usp=sharing"
+                 href = "https://drive.google.com/file/d/1JCpkoNdEn4w5TiK0GgSIJmQDaZSuPP13/view?usp=sharing"
                  ,tags$em("español")
                  , target = "_blank"
                )
@@ -771,7 +770,7 @@ ui <- fluidPage(
                ,br()
                ,"Guía técnica del usuario (solo disponible en " 
                ,tags$a(
-                 href = "https://drive.google.com/file/d/1aXfZiJtv2-6lfSQeQYfMupIICEXwidiC/view?usp=sharing"
+                 href = "https://drive.google.com/file/d/1aZfZnLeEPxvpFBILOFGpYGKLQbDxhMMF/view?usp=sharing"
                  ,tags$em("inglés")
                  , target = "_blank"
                )
@@ -789,8 +788,8 @@ ui <- fluidPage(
              ,p(
                "Programa de Justicia Ambiental "
                ,tags$a(
-                 href = "https://cdphe.colorado.gov/environmental-justice"
-                 ,tags$em("https://cdphe.colorado.gov/environmental-justice")
+                 href = "https://cdphe.colorado.gov/es/justicia-ambiental"
+                 ,tags$em("https://cdphe.colorado.gov/es/justicia-ambiental")
                  , target = "_blank"
                )
              )
@@ -927,8 +926,8 @@ ui <- fluidPage(
              ,p(
                "Herramienta de evaluación del clima y la justicia económica del Consejo de Calidad Ambiental - versión beta "
                ,tags$a(
-                 href = "https://screeningtool.geoplatform.gov/en/#3/33.47/-97.5"
-                 ,tags$em("https://screeningtool.geoplatform.gov/en/#3/33.47/-97.5")
+                 href = "https://screeningtool.geoplatform.gov/es/#3/33.47/-97.5"
+                 ,tags$em("https://screeningtool.geoplatform.gov/es/#3/33.47/-97.5")
                  , target = "_blank"
                )
              )
@@ -1076,7 +1075,7 @@ ui <- fluidPage(
                                "Características demográficas" = c("Sobrecarga por gastos de vivienda",
                                                                   "Porcentaje de discapacidades",
                                                                   "Porcentaje que no completaron los estudios de secundaria",
-                                                                  "Porcentaje de aislamiento",
+                                                                  "Porcentaje de aislamiento lingüístico",
                                                                   "Porcentaje de bajos ingresos",
                                                                   "Porcentaje de personas de color"
                                )
@@ -1180,18 +1179,17 @@ ui <- fluidPage(
             column(4,
                    h3("Recursos adicionales"),
                    p(class = "href2",
-                     "Guía básica del usuario (",
-    tags$a(href = "https://drive.google.com/file/d/1iytdPG5iK2VBNpIy8k6oT6lU6-QKMLOa/view?usp=sharing",
-           tags$span(style="color:white","inglés"), target = "_blank"),
-    "and ",
-    tags$a(href = "https://drive.google.com/file/d/17rQ90fNt3DF-0PbySpGjo2tiy9AmDiCc/view?usp=sharing",
-           tags$span(style="color:white","español"), target = "_blank"),
-    ")."
+                     "Guía básica del usuario ",
+    tags$a(href = "https://drive.google.com/file/d/1aXfZiJtv2-6lfSQeQYfMupIICEXwidiC/view?usp=sharing",
+           tags$span(style="color:white","(inglés"), target = "_blank"),
+    "y",
+    tags$a(href = "https://drive.google.com/file/d/1JCpkoNdEn4w5TiK0GgSIJmQDaZSuPP13/view?usp=sharing",
+           tags$span(style="color:white","español)"), target = "_blank"),
                    ),
     p(class = "href2",
       "El código y repositorios de los datos están disponibles ",
-      tags$a(href= "https://geospatialcentroid.github.io/Colorado_EnviroScreen/",
-             tags$span(style="color:white","aquí"), target = "_blank")
+      tags$a(href= "https://geospatialcentroid.github.io/COEnviroScreen/",
+             tags$span(style="color:white","aquí."), target = "_blank")
     ),
     p(class = "href2",
       "Descargar ",
@@ -2025,8 +2023,8 @@ server <- function(input, output,session) {
                 ,"Percentil del porcentaje de discapacidades"
                 ,"Porcentaje que no completaron los estudios de secundaria"
                 ,"Percentil del porcentaje que no completaron los estudios de secundaria"
-                ,"Porcentaje de aislamiento"
-                ,"Percentil del porcentaje de aislamiento"
+                ,"Porcentaje de aislamiento lingüístico"
+                ,"Percentil del porcentaje de aislamiento lingüístico"
                 ,"Porcentaje de bajos ingresos"
                 ,"Percentil del porcentaje de bajos ingresos"
                 ,"Porcentaje de personas de color"
@@ -2115,7 +2113,7 @@ server <- function(input, output,session) {
                       ,"Indicador de salud mental"
                       ,"Porcentaje de discapacidades"
                       ,'Porcentaje que no completaron los estudios de secundaria'
-                      ,"Porcentaje de aislamiento"
+                      ,"Porcentaje de aislamiento lingüístico"
                       ,"Porcentaje de bajos ingresos"
                       ,"Porcentaje de personas de color"
         )){

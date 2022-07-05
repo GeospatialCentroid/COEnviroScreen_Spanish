@@ -1,13 +1,12 @@
 # Colorado EnviroScreen Shiny App - Spanish
 
-View shiny app [here](https://teeo-cdphe.shinyapps.io/COEnviroScreen_Spanish/)
+View the Shiny app <a href="https://teeo-cdphe.shinyapps.io/COEnviroScreen_Spanish/" target="_blank">here.</a>
 
-The Spanish language inplemention for the Colorado EnviroScreen web mapping application. For more information about the code base supporting this work please visit the project landing [page](https://geospatialcentroid.github.io/COEnviroScreen/). 
-
+The repository contains the data and code base for the Spanish language implemention for the Colorado EnviroScreen web mapping application. For more information about the code base supporting this application, please visit the Colorado EnviroScreen repositories <a href="https://geospatialcentroid.github.io/COEnviroScreen/" target="_blank">landing page.</a>
 
 ## About the Colorado EnviroScreen project
 
-[https://cdphe.colorado.gov/enviroscreen](https://cdphe.colorado.gov/enviroscreen)
+<a href="https://cdphe.colorado.gov/enviroscreen/" target="_blank">https://cdphe.colorado.gov/enviroscreen.</a>
 
 The Colorado Department of Public Health and Environment (CDPHE) and a team at Colorado State University are gathering pre-launch feedback on an enhanced environmental health screening tool for Colorado. This interactive mapping tool is called Colorado EnviroScreen. The tool will launch in early summer.
 
