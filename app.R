@@ -19,7 +19,7 @@ library(readr)
 lapply(list.files(path = "src",recursive = TRUE, full.names = TRUE), source)
 
 # enviroscreen data
-envoData <- readRDS("data/scores/allScores4spanish.rds")%>%
+envoData <- readRDS("data/scores/allScores_2_spanish.rds")%>%
   dplyr::mutate(visParam = `Percentil del puntaje de Colorado EnviroScreen`)%>%
   dplyr::select("Nombre del condado", "GEOID", everything())%>%
   dplyr::select(-"GEOID3")
@@ -350,7 +350,7 @@ geoidMap <- "100"
 
 ui <- fluidPage(
   tags$head(includeHTML(("GoogleAnalytics.html"))),
-  theme = bslib::bs_theme(
+  theme = bslib::bs_theme(version=4,
     bootswatch = "flatly",
     #bg = "#FFFFFF",
     #fg = "#000",
