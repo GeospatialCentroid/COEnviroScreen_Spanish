@@ -19,7 +19,7 @@ library(readr)
 lapply(list.files(path = "src",recursive = TRUE, full.names = TRUE), source)
 
 # enviroscreen data
-envoData <- readRDS("data/scores/allScores4spanish.rds")%>%
+envoData <- readRDS("data/scores/allScores_2_spanish.rds")%>%
   dplyr::mutate(visParam = `Percentil del puntaje de Colorado EnviroScreen`)%>%
   dplyr::select("Nombre del condado", "GEOID", everything())%>%
   dplyr::select(-"GEOID3")
@@ -350,7 +350,7 @@ geoidMap <- "100"
 
 ui <- fluidPage(
   tags$head(includeHTML(("GoogleAnalytics.html"))),
-  theme = bslib::bs_theme(
+  theme = bslib::bs_theme(version=4,
     bootswatch = "flatly",
     #bg = "#FFFFFF",
     #fg = "#000",
@@ -376,14 +376,15 @@ ui <- fluidPage(
              )
            )
     ),
-    column(8, h1("Colorado EnviroScreen"), p("Junio de 2022"))
+    column(8, h1("Colorado EnviroScreen"), p("Julio de 2022"))
   ),
   br(),
   fluidRow(
     p(HTML("</br><a href='#map'>Saltar al mapa</a>")),
     p("Colorado EnviroScreen es un mapa interactivo de justicia ambiental y una herramienta de evaluación de la salud en Colorado. Un equipo de Colorado State University creó esta herramienta para el Departamento de Salud Pública y Medio Ambiente de Colorado (CDPHE). Se lanzó la versión 1.0 de Colorado EnviroScreen el 28 de junio de 2022. Para obtener más información sobre Colorado EnviroScreen, diríjase a la ",
-      tags$a(href = "https://cdphe.colorado.gov/enviroscreen-es", "página web de Colorado EnviroScreen ", target = "_blank"),
-      "del CDPHE. Puede enviar sus comentarios sobre Colorado EnviroScreen por correo electrónico al CDPHE: cdphe_ej@state.co.us."
+      tags$a(href = "https://cdphe.colorado.gov/enviroscreen", "página web de Colorado EnviroScreen ", target = "_blank"),
+      "del CDPHE. Puede enviar sus comentarios sobre Colorado EnviroScreen por correo electrónico al CDPHE: "
+        ,tags$a(href = "mailto: cdphe_ej@state.co.us","cdphe_ej@state.co.us.")
     )
   ) ,
   fluidRow(
@@ -418,6 +419,11 @@ ui <- fluidPage(
     )),
   fluidRow(
     p("Desplácese hacia abajo para aprender a usar Colorado EnviroScreen.")
+  ),
+  fluidRow(
+    p(strong("Aviso a los usuarios: "), 
+      "el equipo de desarrollo de Colorado EnviroScreen identificó y corrigió un error el 22 de julio de 2022. Este error influyó en algunos de los datos a nivel de área censal y de condado de Colorado EnviroScreen, pero no a nivel de grupo de manzanas censales. Si descargó datos antes del 22 de julio de 2022, vuelva a bajar y use los datos más recientes en los análisis que realice a nivel de área censal o de condado."
+    )
   ),
 
   # # description of use ------------------------------------------------------
@@ -661,6 +667,41 @@ ui <- fluidPage(
     ),
     tabPanel(title =  "Definiciones",
              br()
+             ,tags$strong("Comunidad afectada de manera desproporcionada")
+             ,p(
+               "Este término se refiere a las áreas que cumplen con la definición de comunidad afectada de manera desproporcionada de la Ley de Justicia Ambiental de Colorado (Ley 21-1266 de la Cámara de Representantes). La definición incluye los grupos de manzanas censales con más de un 40 % de la población de bajos ingresos, hogares con sobrecarga por gastos de vivienda o personas de color. “De bajos ingresos” significa que el ingreso promedio del grupo familiar equivale o está por debajo del 200 % del nivel federal de pobreza. “Hogar con sobrecarga por gastos de vivienda” significa que el grupo familiar destina más del 30 % de los ingresos al pago de la vivienda. “Personas de color” incluye a todas las personas que no se identifican como blancos no hispanos. Esta definición no forma parte de los componentes ni del puntaje de EnviroScreen y no influye en los resultados que se presentan en el mapa, las gráficas o la tabla."
+             )
+             ,tags$strong("Comunidad con carbón")
+             ,p(
+               "Se indican como comunidades con carbón todos las áreas censales y grupos de manzanas censales de los condados que cuentan con una central eléctrica a carbón. Estos datos no forman parte de los componentes ni del puntaje de EnviroScreen y no influyen en los resultados que se presentan en el mapa, las gráficas o la tabla."
+             )
+             ,tags$strong("Comunidad con petróleo y gas")
+             ,p(
+               "Se indican como comunidades con petróleo y gas todos las áreas censales y grupos de manzanas censales de los condados que cuentan con operaciones de extracción de petróleo y gas activas. En EnviroScreen también se incluye la proximidad a las operaciones de petróleo y gas como parte del componente de efectos ambientales."
+             )
+             ,tags$strong("Historias en el mapa")
+             ,p(
+               "Estas historias proporcionan una experiencia de inmersión al combinar texto, mapas interactivos y otro contenido multimedia. Las historias de Colorado EnviroScreen ponen de relieve vivencias que complementan los datos de la herramienta, pero cabe señalar que no forman parte del puntaje de EnviroScreen."
+             )
+             ,tags$strong("Justice40")
+             ,p(
+               "La Casa Blanca lanzó la Iniciativa Justice40 en 2021. La meta de la Iniciativa Justice40 es que se destine el 40 por ciento del total de los beneficios de las inversiones del gobierno federal en siete áreas clave a las comunidades desfavorecidas. Estas siete áreas clave son las siguientes: cambio climático, energía limpia y eficiencia energética, tráfico limpio, vivienda asequible y sostenible, formación y desarrollo de la fuerza laboral, descontaminación y disminución de la contaminación histórica y desarrollo de una infraestructura de importancia clave para evitar la contaminación del agua. De acuerdo con la definición de la Iniciativa Justice40, se considera que una comunidad es “desfavorecida” si uno o más indicadores ambientales o climáticos del área censal se encuentran por encima del umbral y los indicadores socioeconómicos del área censal están por encima del umbral. Esta definición no forma parte de los componentes ni del puntaje de EnviroScreen y no influye en los resultados que se presentan en el mapa, las gráficas o la tabla."
+             )
+             ,tags$strong("Puntaje de características demográficas")
+             ,p(
+               "El puntaje de características demográficas representa las vulnerabilidades sociales y económicas de una comunidad. Este puntaje varía de 0 a 100, siendo que los números más altos representan un mayor grado de vulnerabilidad. Para calcular este puntaje, se usan los datos sobre las personas que viven con discapacidades, la carga por gastos de vivienda, el nivel de educación alcanzado, dominio limitado del inglés, ingreso, raza y grupo u origen étnico."
+             )
+             ,tags$strong("Puntaje de carga climática")
+             ,p(
+               "El puntaje de carga climática representa el riesgo de sequías, inundaciones, calor extremo e incendios forestales de una comunidad, en comparación con el resto del estado. Este puntaje varía de 0 a 100; cuanto más alto es el puntaje, mayor es la carga."
+             )
+             ,tags$strong("Puntaje de contaminación y carga climática")
+             ,p(
+               "El puntaje de contaminación y carga climática combina los puntajes de los siguientes componentes: exposiciones ambientales, efectos ambientales y carga climática. Este puntaje varía de 0 a 100, siendo que el puntaje más alto representa a las poblaciones con una mayor carga ambiental."
+             )
+             ,tags$strong("Puntaje de efectos ambientales")
+             ,p("El puntaje de efectos ambientales representa la cantidad de sitios peligrosos o tóxicos que hay en una comunidad en relación con el resto del estado. Este puntaje varía de 0 a 100, siendo que los puntajes más altos son los peores. El puntaje es el promedio de los datos sobre la proximidad a las minas, operaciones de petróleo y gas, aguas superficiales deterioradas, instalaciones de descarga de aguas residuales, sitios Superfondos, instalaciones que usan sustancias químicas peligrosas e instalaciones que generan, tratan, almacenan o eliminan residuos peligrosos. Puesto que la mayoría de las personas no están directamente expuestas a estos sitios, para este puntaje se usa un peso o ponderación de la mitad en relación con las exposiciones ambientales al calcular el puntaje total de contaminación y carga climática."
+             )
              ,tags$strong("Puntaje de EnviroScreen")
              ,p(
                "El puntaje de EnviroScreen combina las características de la población con las cargas ambientales. Este puntaje varía de 0 a 100. "
@@ -674,54 +715,20 @@ ui <- fluidPage(
                ,tags$strong("Haga de cuenta que el puntaje de EnviroScreen de un área censal es 20.")
                ,"  Esto significa que el puntaje de EnviroScreen de esta área es más alto que el puntaje del 20 % de todas las áreas censales de Colorado. En otras palabras, es menos probable que el 20 % de los condados de Colorado se vean afectados por injusticias de salud ambiental que el área censal en cuestión, o es más probable que el 80 % de las áreas censales de Colorado se vean afectadas por injusticias de salud ambiental que el área censal en cuestión. "
              )
-             ,tags$strong("Puntaje de contaminación y carga climática")
-             ,p(
-               "El puntaje de contaminación y carga climática combina los puntajes de los siguientes componentes: exposiciones ambientales, efectos ambientales y carga climática. Este puntaje varía de 0 a 100, siendo que el puntaje más alto representa a las poblaciones con una mayor carga ambiental."
+             ,tags$strong("Puntaje de exposiciones ambientales")
+             ,p("El puntaje de exposiciones ambientales representa la exposición de una comunidad a ciertos riesgos ambientales en relación con el resto del estado. Este puntaje varía de 0 a 100, siendo que los puntajes más altos son los peores. El puntaje de exposiciones ambientales no incluye todos los contaminantes; es el promedio de los datos sobre el material particulado de diésel, la proximidad al tráfico, el ozono, el material particulado 2.5, los contaminantes tóxicos del aire, otros contaminantes del aire, el riesgo de exposición al plomo, las infracciones en relación con el agua potable y el ruido."
              )
              ,tags$strong("Puntaje de factores de salud y sociales")
              ,p(
                "El puntaje de factores de salud y sociales combina el puntaje de poblaciones sensibles y características demográficas. Este puntaje varía de 0 a 100, siendo que el puntaje más alto representa a las poblaciones más susceptibles y vulnerables."
              )
-             ,tags$strong("Puntaje de exposiciones ambientales")
-             ,p("El puntaje de exposiciones ambientales representa la exposición de una comunidad a ciertos riesgos ambientales en relación con el resto del estado. Este puntaje varía de 0 a 100, siendo que los puntajes más altos son los peores. El puntaje de exposiciones ambientales no incluye todos los contaminantes; es el promedio de los datos sobre el material particulado de diésel, la proximidad al tráfico, el ozono, el material particulado 2.5, los contaminantes tóxicos del aire, otros contaminantes del aire, el riesgo de exposición al plomo, las infracciones en relación con el agua potable y el ruido."
-             )
-             ,tags$strong("Puntaje de efectos ambientales")
-             ,p("El puntaje de efectos ambientales representa la cantidad de sitios peligrosos o tóxicos que hay en una comunidad en relación con el resto del estado. Este puntaje varía de 0 a 100, siendo que los puntajes más altos son los peores. El puntaje es el promedio de los datos sobre la proximidad a las minas, operaciones de petróleo y gas, aguas superficiales deterioradas, instalaciones de descarga de aguas residuales, sitios Superfondos, instalaciones que usan sustancias químicas peligrosas e instalaciones que generan, tratan, almacenan o eliminan residuos peligrosos. Puesto que la mayoría de las personas no están directamente expuestas a estos sitios, para este puntaje se usa un peso o ponderación de la mitad en relación con las exposiciones ambientales al calcular el puntaje total de contaminación y carga climática."                      )
-             ,tags$strong("Puntaje de carga climática")
-             ,p(
-               "El puntaje de carga climática representa el riesgo de sequías, inundaciones, calor extremo e incendios forestales de una comunidad, en comparación con el resto del estado. Este puntaje varía de 0 a 100; cuanto más alto es el puntaje, mayor es la carga."
-             )
              ,tags$strong("Puntaje de poblaciones sensibles")
              ,p(
                "El puntaje de poblaciones sensibles expresa el grado de riesgo a las exposiciones ambientales y los impactos climáticos que corre una comunidad en relación con la salud. Por ejemplo, la contaminación del aire tiene un mayor efecto en las personas de más edad y más jóvenes, así como en las personas con afecciones de salud crónicas, como el asma. Este puntaje varía de 0 a 100, siendo que los puntajes más altos son los peores. Para calcular este puntaje, se usan los datos sobre la tasa de hospitalizaciones por asma, prevalencia de cáncer, prevalencia de diabetes, prevalencia de enfermedades cardíacas, expectativa de vida, tasa de bajo peso al nacer, salud mental, población por encima de 65 años y población por debajo de 5 años."
              )
-             ,tags$strong("Puntaje de características demográficas")
-             ,p(
-               "El puntaje de características demográficas representa las vulnerabilidades sociales y económicas de una comunidad. Este puntaje varía de 0 a 100, siendo que los números más altos representan un mayor grado de vulnerabilidad. Para calcular este puntaje, se usan los datos sobre las personas que viven con discapacidades, la carga por gastos de vivienda, el nivel de educación alcanzado, dominio limitado del inglés, ingreso, raza y grupo u origen étnico."
-             )
-             ,tags$strong("Comunidad afectada de manera desproporcionada")
-             ,p(
-               "Este término se refiere a las áreas que cumplen con la definición de comunidad afectada de manera desproporcionada de la Ley de Justicia Ambiental de Colorado (Ley 21-1266 de la Cámara de Representantes). La definición incluye los grupos de manzanas censales con más de un 40 % de la población de bajos ingresos, hogares con sobrecarga por gastos de vivienda o personas de color. “De bajos ingresos” significa que el ingreso promedio del grupo familiar equivale o está por debajo del 200 % del nivel federal de pobreza. “Hogar con sobrecarga por gastos de vivienda” significa que el grupo familiar destina más del 30 % de los ingresos al pago de la vivienda. “Personas de color” incluye a todas las personas que no se identifican como blancos no hispanos. Esta definición no forma parte de los componentes ni del puntaje de EnviroScreen y no influye en los resultados que se presentan en el mapa, las gráficas o la tabla."
-             )
-             ,tags$strong("Comunidad con carbón")
-             ,p(
-               "Se indican como comunidades con carbón todos las áreas censales y grupos de manzanas censales de los condados que cuentan con una central eléctrica a carbón. Estos datos no forman parte de los componentes ni del puntaje de EnviroScreen y no influyen en los resultados que se presentan en el mapa, las gráficas o la tabla."
-             )
-             ,tags$strong("Comunidad con petróleo y gas")
-             ,p(
-               "Se indican como comunidades con petróleo y gas todos las áreas censales y grupos de manzanas censales de los condados que cuentan con operaciones de extracción de petróleo y gas activas. En EnviroScreen también se incluye la proximidad a las operaciones de petróleo y gas como parte del componente de efectos ambientales."
-             )
              ,tags$strong("Zona urbana/rural")
              ,p(
                "De acuerdo con la Oficina del Censo de Estados Unidos, las zonas urbanas son zonas con alta densidad de población que incluyen propiedades residenciales, comerciales y de otro tipo. Se consideran como urbanos los condados que incluyen estas zonas urbanas. Se consideran como rurales todos los condados que no forman parte de los centros urbanos. Estos datos no forman parte de los componentes ni del puntaje de EnviroScreen y no influyen en los resultados que se presentan en el mapa, las gráficas o la tabla. "
-             )
-             ,tags$strong("Justice40")
-             ,p(
-               "La Casa Blanca lanzó la Iniciativa Justice40 en 2021. La meta de la Iniciativa Justice40 es que se destine el 40 por ciento del total de los beneficios de las inversiones del gobierno federal en siete áreas clave a las comunidades desfavorecidas. Estas siete áreas clave son las siguientes: cambio climático, energía limpia y eficiencia energética, tráfico limpio, vivienda asequible y sostenible, formación y desarrollo de la fuerza laboral, descontaminación y disminución de la contaminación histórica y desarrollo de una infraestructura de importancia clave para evitar la contaminación del agua. De acuerdo con la definición de la Iniciativa Justice40, se considera que una comunidad es “desfavorecida” si uno o más indicadores ambientales o climáticos del área censal se encuentran por encima del umbral y los indicadores socioeconómicos del área censal están por encima del umbral. Esta definición no forma parte de los componentes ni del puntaje de EnviroScreen y no influye en los resultados que se presentan en el mapa, las gráficas o la tabla."
-             )
-             ,tags$strong("Historias en el mapa")
-             ,p(
-               "Estas historias proporcionan una experiencia de inmersión al combinar texto, mapas interactivos y otro contenido multimedia. Las historias de Colorado EnviroScreen ponen de relieve vivencias que complementan los datos de la herramienta, pero cabe señalar que no forman parte del puntaje de EnviroScreen."
              )
     ),
     tabPanel("Creación de la herramienta",
