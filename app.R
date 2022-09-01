@@ -376,7 +376,7 @@ ui <- fluidPage(
              )
            )
     ),
-    column(8, h1("Colorado EnviroScreen"), p("Julio de 2022"))
+    column(8, h1("Colorado EnviroScreen"), p("Agosto de 2022"))
   ),
   br(),
   fluidRow(
@@ -419,11 +419,6 @@ ui <- fluidPage(
     )),
   fluidRow(
     p("Desplácese hacia abajo para aprender a usar Colorado EnviroScreen.")
-  ),
-  fluidRow(
-    p(strong("Aviso a los usuarios: "), 
-      "el equipo de desarrollo de Colorado EnviroScreen identificó y corrigió un error el 22 de julio de 2022. Este error influyó en algunos de los datos a nivel de área censal y de condado de Colorado EnviroScreen, pero no a nivel de grupo de manzanas censales. Si descargó datos antes del 22 de julio de 2022, vuelva a bajar y use los datos más recientes en los análisis que realice a nivel de área censal o de condado."
-    )
   ),
 
   # # description of use ------------------------------------------------------
