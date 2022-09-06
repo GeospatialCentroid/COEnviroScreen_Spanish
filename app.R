@@ -283,7 +283,7 @@ sm <- df %>% dplyr::filter(!Area %in% c("Four Corners","Greeley"))
 # palette for DI layer
 diPal <- colorFactor(palette = c(
   "#a6cee3", "#33a02c","#b2df8a","#1f78b4"), levels = c("Low Income", "People of Color",
-                                                        "Housing Burden", "More then one category"), di$color
+                                                        "Housing Burden", "Más de una categoría"), di$color
 )
 
 ### dark as low
