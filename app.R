@@ -260,7 +260,7 @@ df <- data.frame(
   ),
   storyMap = c(
     "https://cdphe.colorado.gov/enviroscreen",
-    "https://cdphe.colorado.gov/enviroscreen",
+    "https://storymaps.arcgis.com/stories/be0841e4066f476bad136f320bd478c8",
     "https://storymaps.arcgis.com/stories/820a90b4ee784af5ad813eb5ddcb61af",
     "https://cdphe.colorado.gov/enviroscreen",
     "https://cdphe.colorado.gov/enviroscreen",
@@ -268,7 +268,7 @@ df <- data.frame(
   )
 )%>%
   dplyr::mutate(popup = case_when(
-    Area %in% c("Pueblo", "Valle del Arkansas") ~  paste0(
+    Area %in% c("Pueblo","Valle de San Luis", "Valle del Arkansas") ~  paste0(
       "La historia en el mapa brinda más información sobre la historia de justicia ambiental en la región de ",
       "<a href=",storyMap,"> región de </a>",`Area`,"." ),
     TRUE ~ "Coming soon"
