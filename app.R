@@ -117,9 +117,9 @@ names(envoData)<- c(
   ,"Percentil de sobrecarga por gastos de vivienda"
   ,"area"
   ,"geometry"
-  ,"Comunidad con carbón"                                                   
-  ,"Comunidad con petróleo y gas"                                           
-  ,"Comunidad rural"                                                         
+  ,"Comunidad con carbón"
+  ,"Comunidad con petróleo y gas"
+  ,"Comunidad rural"
   ,"Comunidad de Justice40"                                                  
   ,"Comunidad afectada de manera desproporcionada"                           
   ,"Total de la población"                                                  
@@ -157,15 +157,15 @@ justice40 <- readRDS("data/scores/justice40.rds") %>%
 di <- readRDS("data/scores/diCommunities.rds")%>%
   mutate(
     Mn_FLAG = case_when(
-      Min_FLAG == 1 ~ "Yes",
+      Min_FLAG == 1 ~ "Sí",
       Min_FLAG == 0 ~ "No"
     ),
     FLP_FLA = case_when(
-      FLP_FLAG == 1 ~ "Yes",
+      FLP_FLAG == 1 ~ "Sí",
       FLP_FLAG == 0 ~ "No"
     ),
     Br_FLAG = case_when(
-      Burdened_FLAG == 1 ~ "Yes",
+      Burdened_FLAG == 1 ~ "Sí",
       Burdened_FLAG == 0 ~ "No"
     )
   )%>%
@@ -174,13 +174,13 @@ di <- readRDS("data/scores/diCommunities.rds")%>%
              "<br/><strong>Comunidad afectada de manera desproporcionada: </strong>",
              "<br/><b>Grupo de manzanas censales: </b>", GEOID,
              "<br/>",
-             "<br/><b>40 % de las viviendas son de bajos ingresos: </b>", FLP_FLA,
+             "<br/><b>Más del 40 % de las viviendas son de bajos ingresos: </b>", FLP_FLA,
              "<br/><b>Porcentaje de bajos ingresos: </b>", round(Pov_PCT*100, digits = 1),
              "<br/>",
-             "<br/><b>40 % de las viviendas están integradas por personas de color : </b>", Mn_FLAG,
+             "<br/><b>Más del 40 % de las viviendas están integradas por personas de color : </b>", Mn_FLAG,
              "<br/><b>Porcentaje de personas de color: </b>", round(Min_PCT*100, digits = 1),
              "<br/>",
-             "<br/><b>40 % de las viviendas con sobrecarga por gastos de vivienda : </b>", Br_FLAG,
+             "<br/><b>Más del 40 % de las viviendas experimentan sobrecarga por gastos de vivienda : </b>", Br_FLAG,
              "<br/><b>Porcentaje con sobrecarga por gastos de vivienda: </b>", round(HH_Burdened_Pct*100, digits = 1)
              ,"<br/>"
              ,"<br/>"
@@ -190,9 +190,9 @@ di <- readRDS("data/scores/diCommunities.rds")%>%
   )%>%
   mutate(
     color = as.factor(case_when(
-      Mn_FLAG == "Yes" & FLP_FLA == "No" & Br_FLAG == "No" ~ "People of Color",
-      Mn_FLAG == "No" & FLP_FLA == "Yes" & Br_FLAG == "No" ~ "Low Income",
-      Mn_FLAG == "No" & FLP_FLA == "No" & Br_FLAG == "Yes" ~ "Housing Burden",
+      Mn_FLAG == "Sí" & FLP_FLA == "No" & Br_FLAG == "No" ~ "People of Color",
+      Mn_FLAG == "No" & FLP_FLA == "Sí" & Br_FLAG == "No" ~ "Low Income",
+      Mn_FLAG == "No" & FLP_FLA == "No" & Br_FLAG == "Sí" ~ "Housing Burden",
       TRUE ~ "Más de una categoría"
     ))
   )%>%
@@ -296,19 +296,22 @@ mapData <-   envoData %>%
   dplyr::select(GEOID,"Puntaje de Colorado EnviroScreen",
                 "Percentil del puntaje de Colorado EnviroScreen",
                 "Nombre del condado",
-                visParam,
-                "Comunidad con carbón",
-                "Comunidad con petróleo y gas",
-                "Comunidad rural")%>%
+                visParam
+                # ,
+                # "Comunidad con carbón",
+                # "Comunidad con petróleo y gas",
+                # "Comunidad rural"
+                )%>%
   dplyr::mutate(
     popup = paste0(
       "<br/><strong>Puntaje de Colorado EnviroScreen</strong>", # needs to be text
       paste0("<br/><strong>",`Nombre del condado`,"</strong>"),
       paste0("<br/><b>Medida:</b> ", round(`Puntaje de Colorado EnviroScreen`, digits = 2),
-             "<br/><b>Puntaje:</b> ", as.character(round(`Percentil del puntaje de Colorado EnviroScreen`), digits =  0)),
-      paste0("<br/><b>Comunidad con carbón:</b> ", `Comunidad con carbón`),
-      paste0("<br/><b>Comunidad con petróleo y gas:</b> ", `Comunidad con petróleo y gas`),
-      paste0("<br/><b>Comunidad rural:</b> ", `Comunidad rural`)
+             "<br/><b>Puntaje (percentil):</b> ", as.character(round(`Percentil del puntaje de Colorado EnviroScreen`), digits =  0))
+      # ,
+      # paste0("<br/><b>Comunidad con carbón:</b> ", `Comunidad con carbón`),
+      # paste0("<br/><b>Comunidad con petróleo y gas:</b> ", `Comunidad con petróleo y gas`),
+      # paste0("<br/><b>Comunidad rural:</b> ", `Comunidad rural`)
     )
   )%>% as("sf")
 
@@ -515,7 +518,7 @@ ui <- fluidPage(
                ,"Las opciones del mapa base permiten elegir distintos mapas de fondo (p.ej., claro, oscuro o con calles y lugares de interés). Las opciones del mapa base no influyen en los percentiles ni en las medidas que se presentan en la herramienta."
                ,br()
                ,br()
-               ,"Las capas adicionales proporcionan información sobre las zonas que producen petróleo y gas, tienen centrales a carbón, son comunidades rurales, han sido designadas por el gobierno federal como comunidades de Justice40 o cumplen con la definición de comunidad afectada de manera desproporcionada del Departamento de Salud Pública y Medio Ambiente (CDPHE). Las capas adicionales solo ofrecen más contexto. Las capas adicionales no forman parte de los métodos de EnviroScreen y no influyen en los percentiles o medidas que se presentan en la herramienta."
+               ,"Las capas adicionales proporcionan información sobre las zonas que han sido designadas por el gobierno federal como comunidades de Justice40 o cumplen con la definición de comunidad afectada de manera desproporcionada del Departamento de Salud Pública y Medio Ambiente (CDPHE). Las capas adicionales solo ofrecen más contexto. Las capas adicionales no forman parte de los métodos de EnviroScreen y no influyen en los percentiles o medidas que se presentan en la herramienta."
              ),
              tags$h4("Paso 3: Explore los datos de manera diferente."),
              p(
@@ -666,14 +669,14 @@ ui <- fluidPage(
              ,p(
                "Este término se refiere a las áreas que cumplen con la definición de comunidad afectada de manera desproporcionada de la Ley de Justicia Ambiental de Colorado (Ley 21-1266 de la Cámara de Representantes). La definición incluye los grupos de manzanas censales con más de un 40 % de la población de bajos ingresos, hogares con sobrecarga por gastos de vivienda o personas de color. “De bajos ingresos” significa que el ingreso promedio del grupo familiar equivale o está por debajo del 200 % del nivel federal de pobreza. “Hogar con sobrecarga por gastos de vivienda” significa que el grupo familiar destina más del 30 % de los ingresos al pago de la vivienda. “Personas de color” incluye a todas las personas que no se identifican como blancos no hispanos. Esta definición no forma parte de los componentes ni del puntaje de EnviroScreen y no influye en los resultados que se presentan en el mapa, las gráficas o la tabla."
              )
-             ,tags$strong("Comunidad con carbón")
-             ,p(
-               "Se indican como comunidades con carbón todos las áreas censales y grupos de manzanas censales de los condados que cuentan con una central eléctrica a carbón. Estos datos no forman parte de los componentes ni del puntaje de EnviroScreen y no influyen en los resultados que se presentan en el mapa, las gráficas o la tabla."
-             )
-             ,tags$strong("Comunidad con petróleo y gas")
-             ,p(
-               "Se indican como comunidades con petróleo y gas todos las áreas censales y grupos de manzanas censales de los condados que cuentan con operaciones de extracción de petróleo y gas activas. En EnviroScreen también se incluye la proximidad a las operaciones de petróleo y gas como parte del componente de efectos ambientales."
-             )
+             # ,tags$strong("Comunidad con carbón")
+             # ,p(
+             #   "Se indican como comunidades con carbón todos las áreas censales y grupos de manzanas censales de los condados que cuentan con una central eléctrica a carbón. Estos datos no forman parte de los componentes ni del puntaje de EnviroScreen y no influyen en los resultados que se presentan en el mapa, las gráficas o la tabla."
+             # )
+             # ,tags$strong("Comunidad con petróleo y gas")
+             # ,p(
+             #   "Se indican como comunidades con petróleo y gas todos las áreas censales y grupos de manzanas censales de los condados que cuentan con operaciones de extracción de petróleo y gas activas. En EnviroScreen también se incluye la proximidad a las operaciones de petróleo y gas como parte del componente de efectos ambientales."
+             # )
              ,tags$strong("Historias en el mapa")
              ,p(
                "Estas historias proporcionan una experiencia de inmersión al combinar texto, mapas interactivos y otro contenido multimedia. Las historias de Colorado EnviroScreen ponen de relieve vivencias que complementan los datos de la herramienta, pero cabe señalar que no forman parte del puntaje de EnviroScreen."
@@ -721,10 +724,10 @@ ui <- fluidPage(
              ,p(
                "El puntaje de poblaciones sensibles expresa el grado de riesgo a las exposiciones ambientales y los impactos climáticos que corre una comunidad en relación con la salud. Por ejemplo, la contaminación del aire tiene un mayor efecto en las personas de más edad y más jóvenes, así como en las personas con afecciones de salud crónicas, como el asma. Este puntaje varía de 0 a 100, siendo que los puntajes más altos son los peores. Para calcular este puntaje, se usan los datos sobre la tasa de hospitalizaciones por asma, prevalencia de cáncer, prevalencia de diabetes, prevalencia de enfermedades cardíacas, expectativa de vida, tasa de bajo peso al nacer, salud mental, población por encima de 65 años y población por debajo de 5 años."
              )
-             ,tags$strong("Zona urbana/rural")
-             ,p(
-               "De acuerdo con la Oficina del Censo de Estados Unidos, las zonas urbanas son zonas con alta densidad de población que incluyen propiedades residenciales, comerciales y de otro tipo. Se consideran como urbanos los condados que incluyen estas zonas urbanas. Se consideran como rurales todos los condados que no forman parte de los centros urbanos. Estos datos no forman parte de los componentes ni del puntaje de EnviroScreen y no influyen en los resultados que se presentan en el mapa, las gráficas o la tabla. "
-             )
+             # ,tags$strong("Zona urbana/rural")
+             # ,p(
+             #   "De acuerdo con la Oficina del Censo de Estados Unidos, las zonas urbanas son zonas con alta densidad de población que incluyen propiedades residenciales, comerciales y de otro tipo. Se consideran como urbanos los condados que incluyen estas zonas urbanas. Se consideran como rurales todos los condados que no forman parte de los centros urbanos. Estos datos no forman parte de los componentes ni del puntaje de EnviroScreen y no influyen en los resultados que se presentan en el mapa, las gráficas o la tabla. "
+             # )
     ),
     tabPanel("Creación de la herramienta",
              br()
@@ -1278,12 +1281,12 @@ server <- function(input, output,session) {
       layerId = mapData$GEOID,
       group = "Puntaje del indicador"
     )%>%
-      addPolyLine(sf1 = oil, group = "Comunidad con petroleo y gas",
-                  popup = "<strong>Definition: </strong> Counties that have active oil and gas operations.")%>%
-      addPolyLine(sf1 = rural, group = "Comunidad rural",
-                  popup = "<strong>Definition: </strong> Counties that do not contain a U.S. Census Bureau's urban area") %>%
-      addPolyLine(sf1 = coal, group = "Comunidad con carbon",
-                  popup = "<strong>Definition: </strong> Counties that have a coal-burning power plant.") %>%
+      # addPolyLine(sf1 = oil, group = "Comunidad con petroleo y gas",
+      #             popup = "<strong>Definition: </strong> Counties that have active oil and gas operations.")%>%
+      # addPolyLine(sf1 = rural, group = "Comunidad rural",
+      #             popup = "<strong>Definition: </strong> Counties that do not contain a U.S. Census Bureau's urban area") %>%
+      # addPolyLine(sf1 = coal, group = "Comunidad con carbon",
+      #             popup = "<strong>Definition: </strong> Counties that have a coal-burning power plant.") %>%
       addPolygons(
         data = di,
         fillColor =  ~diPal(`color`),
@@ -1334,27 +1337,27 @@ server <- function(input, output,session) {
                 opacity = 1,
                 group = "Comunidad afectada de manera desproporcionada"
       )%>%
-      addLegendImage(images = "www/oilGas.png",
-                     labels = "Comunidad con petróleo y gas",
-                     width = 25,
-                     height = 25,
-                     position = 'topright',
-                     group = "Comunidad con petroleo y gas",
-                     labelStyle = "font-size: 16")%>%
-      addLegendImage(images = "www/rural.png",
-                     labels = "Comunidad rural",
-                     width = 25,
-                     height = 25,
-                     position = 'topright',
-                     group = "Comunidad rural",
-                     labelStyle = "font-size: 16")%>%
-      addLegendImage(images = "www/coal.png",
-                     labels = "Comunidad con carbón",
-                     width = 25,
-                     height = 25,
-                     position = 'topright',
-                     group = "Comunidad con carbon",
-                     labelStyle = "font-size: 16")%>%
+      # addLegendImage(images = "www/oilGas.png",
+      #                labels = "Comunidad con petróleo y gas",
+      #                width = 25,
+      #                height = 25,
+      #                position = 'topright',
+      #                group = "Comunidad con petroleo y gas",
+      #                labelStyle = "font-size: 16")%>%
+      # addLegendImage(images = "www/rural.png",
+      #                labels = "Comunidad rural",
+      #                width = 25,
+      #                height = 25,
+      #                position = 'topright',
+      #                group = "Comunidad rural",
+      #                labelStyle = "font-size: 16")%>%
+      # addLegendImage(images = "www/coal.png",
+      #                labels = "Comunidad con carbón",
+      #                width = 25,
+      #                height = 25,
+      #                position = 'topright',
+      #                group = "Comunidad con carbon",
+      #                labelStyle = "font-size: 16")%>%
       addLegend("topright",
                 colors = "#fb9a99",
                 labels =  "Comunidad de Justice40",
@@ -1366,9 +1369,9 @@ server <- function(input, output,session) {
       baseGroups = c("Claro","Oscuro", "OpenStreetMap"),
       overlayGroups = c(
         "Puntaje del indicador",
-        "Comunidad con carbon",
-        "Comunidad rural",
-        'Comunidad con petroleo y gas',
+        # "Comunidad con carbon",
+        # "Comunidad rural",
+        # 'Comunidad con petroleo y gas',
         "Comunidad afectada de manera desproporcionada",
         "Comunidad de Justice40",
         "Historias en el mapa"
@@ -1377,16 +1380,16 @@ server <- function(input, output,session) {
       options = layersControlOptions(collapsed = TRUE))%>%
       htmlwidgets::onRender("
         function() {
-            $('.leaflet-control-layers-overlays').prepend('<label style=\"text-align:center\">Map Layers</label>');
-            $('.leaflet-control-layers-list').prepend('<label style=\"text-align:center\">Base Maps</label>');
+            $('.leaflet-control-layers-overlays').prepend('<label style=\"text-align:center\">Capas del mapa</label>');
+            $('.leaflet-control-layers-list').prepend('<label style=\"text-align:center\">Mapas base</label>');
         }
     ")%>%
       # hide layers (off when stating)
       hideGroup(
         group = c(
-          "Comunidad con carbon",
-          "Comunidad rural",
-          'Comunidad con petroleo y gas',
+          # "Comunidad con carbon",
+          # "Comunidad rural",
+          # 'Comunidad con petroleo y gas',
           "Comunidad afectada de manera desproporcionada",
           "Comunidad de Justice40",
           "Historias en el mapa"))
@@ -2036,10 +2039,10 @@ server <- function(input, output,session) {
                 "GEOID",
                 "Nombre del condado",
                 "Comunidad afectada de manera desproporcionada",
-                "Comunidad de Justice40"
-                ,"Comunidad con carbón"
-                ,"Comunidad con petróleo y gas"
-                ,"Comunidad rural",
+                "Comunidad de Justice40",
+                # ,"Comunidad con carbón"
+                # ,"Comunidad con petróleo y gas"
+                # ,"Comunidad rural",
                 "Total de la población"
               )
           }
@@ -2080,7 +2083,11 @@ server <- function(input, output,session) {
           paste(input$Geom, "_data.csv", sep = "")
         },
         content = function(file) {
-          write.csv(df1() %>% sf::st_drop_geometry() %>% select(-"visParam"), file, row.names = FALSE)    }
+          write.csv(df1() %>% sf::st_drop_geometry() %>% select(-"visParam"
+                                                                ,-"Comunidad con carbón"
+                                                                ,-"Comunidad con petróleo y gas"
+                                                                ,-"Comunidad rural"
+                                                                ), file, row.names = FALSE)    }
       )
       # Downloadable csv of data description ----
       output$downloadData2 <- downloadHandler(
@@ -2148,10 +2155,10 @@ server <- function(input, output,session) {
               "<br/><strong>", as.character(in1),"</strong>", # needs to be text
               paste0("<br/><strong>",`Nombre del condado`,"</strong>"),
               paste0("<br/><b>Medida:</b> ", round(!!as.symbol(indicator1), digits = 2),
-                       "<br/><b>Puntaje:</b> ", round(!!as.symbol(indicator2), digits =  0)),
-              paste0("<br/><b>Comunidad con carbón:</b> ", `Comunidad con carbón`),
-              paste0("<br/><b>Comunidad con petróleo y gas:</b> ", `Comunidad con petróleo y gas`),
-              paste0("<br/><b>Comunidad rural:</b> ", `Comunidad rural`)
+                       "<br/><b>Puntaje (percentil):</b> ", round(!!as.symbol(indicator2), digits =  0))
+              # , paste0("<br/><b>Comunidad con carbón:</b> ", `Comunidad con carbón`),
+              # paste0("<br/><b>Comunidad con petróleo y gas:</b> ", `Comunidad con petróleo y gas`),
+              # paste0("<br/><b>Comunidad rural:</b> ", `Comunidad rural`)
           )
         )
 
