@@ -1324,7 +1324,7 @@ server <- function(input, output,session) {
       colors = colorRamp,
       title = "Valores estimados",
       labels = c(" Mayor carga", "", "", "", " Menor carga"),
-      opacity = 1,
+      opacity = .5,
       layerId = "firstLegend",
       group = "Puntaje del indicador",
       na.label = "No Data"
@@ -1334,7 +1334,7 @@ server <- function(input, output,session) {
                 title = "Comunidad afectada de manera desproporcionada",
                 labels = c("Bajos ingresos", "Personas de color",
                            "Sobrecarga por gastos de vivienda", "Más de una categoría"),
-                opacity = 1,
+                opacity = .8,
                 group = "Comunidad afectada de manera desproporcionada"
       )%>%
       # addLegendImage(images = "www/oilGas.png",
@@ -1361,7 +1361,7 @@ server <- function(input, output,session) {
       addLegend("topright",
                 colors = "#fb9a99",
                 labels =  "Comunidad de Justice40",
-                opacity = 1,
+                opacity = .8,
                 group = "Comunidad de Justice40"
       )%>%
       # add control groups ------------------------------------------------------
@@ -2175,7 +2175,7 @@ server <- function(input, output,session) {
             color = "#F9C1AE",
             weight = 0.2,
             smoothFactor = 0.5,
-            opacity = 1.0,
+            opacity = 0.5,
             layerId = ed2$GEOID,
             fillOpacity = 0.5,
             fillColor =  ~pal1(ed2$visParam),
@@ -2195,7 +2195,7 @@ server <- function(input, output,session) {
             colors = colorRamp,
             title = "Valores estimados",
             labels = labels1,
-            opacity = 1,
+            opacity = .5,
             layerId = "firstLegend",
             group = "Puntaje del indicador"
             # labFormat = labelFormat(transform = function(x) sort(x, decreasing = TRUE))
