@@ -167,7 +167,11 @@ di <- readRDS("data/scores/diCommunities.rds")%>%
     Br_FLAG = case_when(
       Burdened_FLAG == 1 ~ "Sí",
       Burdened_FLAG == 0 ~ "No"
-    )
+    ),
+    Sc_FLAG = case_when(
+      Score_FLAG == 1 ~ "Sí",
+      Score_FLAG == 0 ~ "No"
+  )
   )%>%
   mutate(popup =
            paste0(
@@ -181,18 +185,22 @@ di <- readRDS("data/scores/diCommunities.rds")%>%
              "<br/><b>Porcentaje de personas de color: </b>", round(Min_PCT*100, digits = 1),
              "<br/>",
              "<br/><b>Más del 40 % de las viviendas experimentan sobrecarga por gastos de vivienda : </b>", Br_FLAG,
-             "<br/><b>Porcentaje con sobrecarga por gastos de vivienda: </b>", round(HH_Burdened_Pct*100, digits = 1)
-             ,"<br/>"
-             ,"<br/>"
-             ,"Lea la definición de comunidad afectada de manera desproporcionada de Colorado en la " 
+             "<br/><b>Porcentaje con sobrecarga por gastos de vivienda: </b>", round(HH_Burdened_Pct*100, digits = 1),
+             "<br/>",
+             "<br/><b>El puntaje de EnviroScreen (percentil) es mayor que 80: </b>", Sc_FLAG,
+             "<br/><b>Puntaje de EnviroScreen (percentil): </b>", round(EnviroScreen_Pctl, digits = 1),
+             "<br/>",
+             "<br/>",
+             "Lea la definición de comunidad afectada de manera desproporcionada de Colorado en la " 
              ,tags$a(href = "https://cdphe.colorado.gov/environmental-justice", " Ley de Justicia Ambiental.", target = "_blank")
            )
   )%>%
   mutate(
     color = as.factor(case_when(
-      Mn_FLAG == "Sí" & FLP_FLA == "No" & Br_FLAG == "No" ~ "People of Color",
-      Mn_FLAG == "No" & FLP_FLA == "Sí" & Br_FLAG == "No" ~ "Low Income",
-      Mn_FLAG == "No" & FLP_FLA == "No" & Br_FLAG == "Sí" ~ "Housing Burden",
+      Mn_FLAG == "Sí" & FLP_FLA == "No" & Br_FLAG == "No" & Sc_FLAG == "No" ~ "People of Color",
+      Mn_FLAG == "No" & FLP_FLA == "Sí" & Br_FLAG == "No" & Sc_FLAG == "No" ~ "Low Income",
+      Mn_FLAG == "No" & FLP_FLA == "No" & Br_FLAG == "Sí" & Sc_FLAG == "No" ~ "Housing Burden",
+      Mn_FLAG == "No" & FLP_FLA == "No" & Br_FLAG == "No" & Sc_FLAG == "Sí" ~ "EnviroScreen Score",
       TRUE ~ "Más de una categoría"
     ))
   )%>%
@@ -262,13 +270,13 @@ df <- data.frame(
     "https://cdphe.colorado.gov/enviroscreen",
     "https://storymaps.arcgis.com/stories/be0841e4066f476bad136f320bd478c8",
     "https://storymaps.arcgis.com/stories/820a90b4ee784af5ad813eb5ddcb61af",
-    "https://cdphe.colorado.gov/enviroscreen",
+    "https://storymaps.arcgis.com/stories/3be4e7f804a04a5487286cbf8efc491e",
     "https://cdphe.colorado.gov/enviroscreen",
     "https://storymaps.arcgis.com/stories/0ef3038fda624133ba3c517462ed0e8d"
   )
 )%>%
   dplyr::mutate(popup = case_when(
-    Area %in% c("Pueblo","Valle de San Luis", "Valle del Arkansas") ~  paste0(
+    Area %in% c("Pueblo","Valle de San Luis", "Valle del Arkansas", "Commerce City/North Denver") ~  paste0(
       "La historia en el mapa brinda más información sobre la historia de justicia ambiental en la región de ",
       "<a href=",storyMap,"> región de </a>",`Area`,"." ),
     TRUE ~ "Coming soon"
@@ -282,8 +290,8 @@ sm <- df %>% dplyr::filter(!Area %in% c("Four Corners","Greeley"))
 
 # palette for DI layer
 diPal <- colorFactor(palette = c(
-  "#a6cee3", "#33a02c","#b2df8a","#1f78b4"), levels = c("Low Income", "People of Color",
-                                                        "Housing Burden", "Más de una categoría"), di$color
+  "#a6cee3", "#33a02c","#b2df8a", "#fc8d62", "#1f78b4"), levels = c("Low Income", "People of Color",
+                                                        "Housing Burden", "EnviroScreen Score", "Más de una categoría"), di$color
 )
 
 ### dark as low
@@ -303,8 +311,7 @@ mapData <-   envoData %>%
                 # "Comunidad rural"
                 )%>%
   dplyr::mutate(
-    popup = paste0(
-      "<br/><strong>Puntaje de Colorado EnviroScreen</strong>", # needs to be text
+    popup = paste0("<strong>Puntaje de Colorado EnviroScreen</strong>", # needs to be text
       paste0("<br/><strong>",`Nombre del condado`,"</strong>"),
       paste0("<br/><b>Medida:</b> ", round(`Puntaje de Colorado EnviroScreen`, digits = 2),
              "<br/><b>Puntaje (percentil):</b> ", as.character(round(`Percentil del puntaje de Colorado EnviroScreen`), digits =  0))
@@ -667,7 +674,7 @@ ui <- fluidPage(
              br()
              ,tags$strong("Comunidad afectada de manera desproporcionada")
              ,p(
-               "Este término se refiere a las áreas que cumplen con la definición de comunidad afectada de manera desproporcionada de la Ley de Justicia Ambiental de Colorado (Ley 21-1266 de la Cámara de Representantes). La definición incluye los grupos de manzanas censales con más de un 40 % de la población de bajos ingresos, hogares con sobrecarga por gastos de vivienda o personas de color. “De bajos ingresos” significa que el ingreso promedio del grupo familiar equivale o está por debajo del 200 % del nivel federal de pobreza. “Hogar con sobrecarga por gastos de vivienda” significa que el grupo familiar destina más del 30 % de los ingresos al pago de la vivienda. “Personas de color” incluye a todas las personas que no se identifican como blancos no hispanos. Esta definición no forma parte de los componentes ni del puntaje de EnviroScreen y no influye en los resultados que se presentan en el mapa, las gráficas o la tabla."
+               "Este término se refiere a las áreas que cumplen con la definición de comunidad afectada de manera desproporcionada de la Ley de Justicia Ambiental de Colorado (Ley 21-1266 de la Cámara de Representantes). La definición incluye los grupos de manzanas censales con más de un 40 % de la población de bajos ingresos, hogares con sobrecarga por gastos de vivienda o personas de color. “De bajos ingresos” significa que el ingreso promedio del grupo familiar equivale o está por debajo del 200 % del nivel federal de pobreza. “Hogar con sobrecarga por gastos de vivienda” significa que el grupo familiar destina más del 30 % de los ingresos al pago de la vivienda. “Personas de color” incluye a todas las personas que no se identifican como blancos no hispanos. Esto también incluye a los grupos de manzanas censales que experimentan tasas más altas de impactos acumulativos, lo cual se ve representado por los puntajes de EnviroScreen (percentiles) por encima de 80. Esta definición no forma parte de los componentes ni del puntaje de EnviroScreen y no influye en los resultados que se presentan en el mapa, las gráficas o la tabla."
              )
              # ,tags$strong("Comunidad con carbón")
              # ,p(
@@ -1330,10 +1337,10 @@ server <- function(input, output,session) {
       na.label = "No Data"
     ) %>%
       addLegend("topright",
-                colors = c("#a6cee3", "#33a02c","#b2df8a","#1f78b4"),
+                colors = c("#a6cee3", "#33a02c","#b2df8a","#fc8d62", "#1f78b4"),
                 title = "Comunidad afectada de manera desproporcionada",
                 labels = c("Bajos ingresos", "Personas de color",
-                           "Sobrecarga por gastos de vivienda", "Más de una categoría"),
+                           "Sobrecarga por gastos de vivienda", "Puntaje de EnviroScreen", "Más de una categoría"),
                 opacity = .8,
                 group = "Comunidad afectada de manera desproporcionada"
       )%>%
@@ -2141,6 +2148,7 @@ server <- function(input, output,session) {
         ed2 <- ed2 %>%
           mutate(visParam = !!as.symbol(indicator))%>%# https://stackoverflow.com/questions/62862705/r-shiny-mutate-replace-how-to-mutate-specific-column-selected-from-selectinput
           dplyr::select(GEOID,
+                        area,
                         `Nombre del condado`,
                         indicator1,
                         indicator2,
@@ -2151,9 +2159,9 @@ server <- function(input, output,session) {
 
         ed2 <- ed2 %>%
           dplyr::mutate(
-            popup = paste0(
-              "<br/><strong>", as.character(in1),"</strong>", # needs to be text
+            popup = paste0("<strong>", as.character(in1),"</strong>", # needs to be text
               paste0("<br/><strong>",`Nombre del condado`,"</strong>"),
+              paste0("<br/><strong>", area, " GEOID: </strong>", GEOID),
               paste0("<br/><b>Medida:</b> ", round(!!as.symbol(indicator1), digits = 2),
                        "<br/><b>Puntaje (percentil):</b> ", round(!!as.symbol(indicator2), digits =  0))
               # , paste0("<br/><b>Comunidad con carbón:</b> ", `Comunidad con carbón`),
