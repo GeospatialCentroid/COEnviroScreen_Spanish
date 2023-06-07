@@ -117,11 +117,10 @@ names(envoData)<- c(
   ,"Percentil de sobrecarga por gastos de vivienda"
   ,"area"
   ,"geometry"
-  ,"Comunidad con carbón"
-  ,"Comunidad con petróleo y gas"
-  ,"Comunidad rural"
-  ,"Comunidad de Justice40"                                                  
-  ,"Comunidad afectada de manera desproporcionada"                           
+  ,"Comunidad de Justice40"    
+  ,"Comunidad afectada de manera desproporcionada previa (enero de 2023 a mayo de 2023)"
+  ,"Comunidad afectada de manera desproporcionada (mayo de 2023)"
+  ,"Reglamento 3 de la AQCC - Comunidad afectada de manera desproporcionada"                           
   ,"Total de la población"                                                  
   ,"visParam"
 )
@@ -129,11 +128,11 @@ names(envoData)<- c(
 envoData$area[envoData$area == "Ã\u0081rea censal"] <- "Área censal"
 
 
-# Additional Data
-oil <- readRDS("data/scores/oilgasVis.rds")
-coal <- readRDS("data/scores/coalVis.rds")
-rural <- readRDS("data/scores/ruralVis.rds")
-descriptors <- read_csv("data/descriptions/indicatorDesc.csv")%>%
+# # Additional Data
+# oil <- readRDS("data/scores/oilgasVis.rds")
+# coal <- readRDS("data/scores/coalVis.rds")
+# rural <- readRDS("data/scores/ruralVis.rds")
+descriptors <- read_csv("data/descriptions/indicatorDesc.csv", locale=locale(encoding="latin1"))%>%
   dplyr::select(1:6)%>%
   `colnames<-`(c("Nombre del indicador", "Fuente de datos", "Fecha (recolección de datos)"
                  , "Unidades", "División geográfica medida", "Description"))
@@ -154,59 +153,13 @@ justice40 <- readRDS("data/scores/justice40.rds") %>%
 )
 
 # di community
-di <- readRDS("data/scores/diCommunities.rds")%>%
-  mutate(
-    Mn_FLAG = case_when(
-      Min_FLAG == 1 ~ "Sí",
-      Min_FLAG == 0 ~ "No"
-    ),
-    FLP_FLA = case_when(
-      FLP_FLAG == 1 ~ "Sí",
-      FLP_FLAG == 0 ~ "No"
-    ),
-    Br_FLAG = case_when(
-      Burdened_FLAG == 1 ~ "Sí",
-      Burdened_FLAG == 0 ~ "No"
-    ),
-    Sc_FLAG = case_when(
-      Score_FLAG == 1 ~ "Sí",
-      Score_FLAG == 0 ~ "No"
-  )
-  )%>%
-  mutate(popup =
-           paste0(
-             "<br/><strong>Comunidad afectada de manera desproporcionada: </strong>",
-             "<br/><b>Grupo de manzanas censales: </b>", GEOID,
-             "<br/>",
-             "<br/><b>Más del 40 % de las viviendas son de bajos ingresos: </b>", FLP_FLA,
-             "<br/><b>Porcentaje de bajos ingresos: </b>", round(Pov_PCT*100, digits = 1),
-             "<br/>",
-             "<br/><b>Más del 40 % de las viviendas están integradas por personas de color : </b>", Mn_FLAG,
-             "<br/><b>Porcentaje de personas de color: </b>", round(Min_PCT*100, digits = 1),
-             "<br/>",
-             "<br/><b>Más del 40 % de las viviendas experimentan sobrecarga por gastos de vivienda : </b>", Br_FLAG,
-             "<br/><b>Porcentaje con sobrecarga por gastos de vivienda: </b>", round(HH_Burdened_Pct*100, digits = 1),
-             "<br/>",
-             "<br/><b>El puntaje de EnviroScreen (percentil) es mayor que 80: </b>", Sc_FLAG,
-             "<br/><b>Puntaje de EnviroScreen (percentil): </b>", round(EnviroScreen_Pctl, digits = 1),
-             "<br/>",
-             "<br/>",
-             "Lea la definición de comunidad afectada de manera desproporcionada de Colorado en la " 
-             ,tags$a(href = "https://cdphe.colorado.gov/environmental-justice", " Ley de Justicia Ambiental.", target = "_blank")
-           )
-  )%>%
-  mutate(
-    color = as.factor(case_when(
-      Mn_FLAG == "Sí" & FLP_FLA == "No" & Br_FLAG == "No" & Sc_FLAG == "No" ~ "People of Color",
-      Mn_FLAG == "No" & FLP_FLA == "Sí" & Br_FLAG == "No" & Sc_FLAG == "No" ~ "Low Income",
-      Mn_FLAG == "No" & FLP_FLA == "No" & Br_FLAG == "Sí" & Sc_FLAG == "No" ~ "Housing Burden",
-      Mn_FLAG == "No" & FLP_FLA == "No" & Br_FLAG == "No" & Sc_FLAG == "Sí" ~ "EnviroScreen Score",
-      TRUE ~ "Más de una categoría"
-    ))
-  )%>%
-  as('sf')
-  
-  
+di <- getDI()
+
+di_2023 <- getDI_2023()
+
+di_AQCC <- getDI_AQCC()
+
+di_MHC <- getDI_MHC()
   
   
   
@@ -292,6 +245,17 @@ sm <- df %>% dplyr::filter(!Area %in% c("Four Corners","Greeley"))
 diPal <- colorFactor(palette = c(
   "#a6cee3", "#33a02c","#b2df8a", "#fc8d62", "#1f78b4"), levels = c("Low Income", "People of Color",
                                                         "Housing Burden", "EnviroScreen Score", "Más de una categoría"), di$color
+)
+
+diPal_2023 <- colorFactor(palette = c(
+  '#332288', '#88CCEE', '#44AA99', '#117733', '#999933', '#DDCC77', '#CC6677', '#882255'), levels = c("Low Income", "People of Color",
+                                                                                                      "Housing Burden", "Linguistically isolated", 
+                                                                                                      "Federally identified (CEJST)", "Tribal Lands", 
+                                                                                                      "EnviroScreen Score", "Más de una categoría"), di_2023$color
+)
+
+diPal_AQCC <- colorFactor(palette = c("#d95f02", "#1b9e77"), 
+                          levels = c("Socioeconomically Vulnerable Community", "Cumulatively Impacted Community"), di_AQCC$color
 )
 
 ### dark as low
@@ -386,7 +350,7 @@ ui <- fluidPage(
              )
            )
     ),
-    column(8, h1("Colorado EnviroScreen"), p("Agosto de 2022"))
+    column(8, h1("Colorado EnviroScreen"), p("Mayo de 2023"))
   ),
   br(),
   fluidRow(
@@ -405,7 +369,7 @@ ui <- fluidPage(
       tags$ul(
         tags$li("identifica las áreas en las que hay y ha habido inequidades ambientales;"),
         tags$li("detalla las áreas en las que la carga para la salud y/o los riesgos ambientales son mayores para las comunidades afectadas de manera desproporcionada;"),
-        tags$li("identifica la ubicación geográfica de las comunidades afectadas de manera desproporcionada según la definición de la Ley de Justicia Ambiental (Ley 21-1266 de la Cámara de Representantes).")
+        tags$li("identifica las áreas geográficas que cumplen con la definición de comunidad afectada de manera desproporcionada que establece la ley de Colorado (Ley 23-1233, Estatutos Revisados de Colorado (C.R.S.) § 24-4-109(2)(b)(II)).")
       )
     )
   ),
@@ -448,7 +412,7 @@ ui <- fluidPage(
                  tags$li("mostrar las áreas de Colorado donde es más probable que se produzcan injusticias de salud ambiental;"),
                  tags$li("identificar las áreas de Colorado en las que las agencias gubernamentales pueden dar prioridad a los recursos y trabajar para reducir la contaminación y otras fuentes de injusticias ambientales;"),
                  tags$li("proporcionar información a fin de empoderar a las comunidades para que intercedan para mejorar la salud pública y el medio ambiente;"),
-                 tags$li("identificar las áreas que cumplen con la definición de “comunidad afectada de manera desproporcionada” de la Ley de Justicia Ambiental (Ley 21-1266 de la Cámara de Representantes)."),
+                 tags$li("identificar las áreas geográficas que cumplen con la definición de comunidad afectada de manera desproporcionada que establece la ley de Colorado (Ley 23-1233, Estatutos Revisados de Colorado (C.R.S.) § 24-4-109(2)(b)(II))."),
                )
              )
              ,p(
@@ -525,7 +489,7 @@ ui <- fluidPage(
                ,"Las opciones del mapa base permiten elegir distintos mapas de fondo (p.ej., claro, oscuro o con calles y lugares de interés). Las opciones del mapa base no influyen en los percentiles ni en las medidas que se presentan en la herramienta."
                ,br()
                ,br()
-               ,"Las capas adicionales proporcionan información sobre las zonas que han sido designadas por el gobierno federal como comunidades de Justice40 o cumplen con la definición de comunidad afectada de manera desproporcionada del Departamento de Salud Pública y Medio Ambiente (CDPHE). Las capas adicionales solo ofrecen más contexto. Las capas adicionales no forman parte de los métodos de EnviroScreen y no influyen en los percentiles o medidas que se presentan en la herramienta."
+               ,"Las capas adicionales del mapa brindan información sobre las áreas que la herramienta de evaluación de justicia climática y económica (CEJST) del gobierno federal define como desfavorecidas para fines de distribución de los fondos de la iniciativa Justice40. Las otras capas muestran las áreas que cumplen con la definición actual y la definición anterior de comunidades afectadas de manera desproporcionada que se aplica a todas las agencias estatales, incluyendo el Departamento de Salud Pública y Medio Ambiente (CDPHE). Cabe señalar que la definición actual de comunidades afectadas de manera desproporcionada comprende a los parques de casas móviles, que se muestran en una capa diferente por ser fuentes puntuales, y no grupos de manzanas censales. Otra capa, también independiente, muestra las áreas a las que se aplica el Reglamento 3 de la Comisión de Control de la Calidad del Aire (AQCC), que rige los permisos en las comunidades afectadas de manera desproporcionada. Las capas adicionales solo ofrecen más contexto. Las capas adicionales no forman parte de los métodos de EnviroScreen y no influyen en los percentiles o medidas que se presentan en la herramienta."
              ),
              tags$h4("Paso 3: Explore los datos de manera diferente."),
              p(
@@ -672,10 +636,10 @@ ui <- fluidPage(
     ),
     tabPanel(title =  "Definiciones",
              br()
-             ,tags$strong("Comunidad afectada de manera desproporcionada")
+             ,tags$strong("Comunidad afectada de manera desproporcionada (mayo de 2023)")
              ,p(
-               "Este término se refiere a las áreas que cumplen con la definición de comunidad afectada de manera desproporcionada de la Ley de Justicia Ambiental de Colorado (Ley 21-1266 de la Cámara de Representantes). La definición incluye los grupos de manzanas censales con más de un 40 % de la población de bajos ingresos, hogares con sobrecarga por gastos de vivienda o personas de color. “De bajos ingresos” significa que el ingreso promedio del grupo familiar equivale o está por debajo del 200 % del nivel federal de pobreza. “Hogar con sobrecarga por gastos de vivienda” significa que el grupo familiar destina más del 30 % de los ingresos al pago de la vivienda. “Personas de color” incluye a todas las personas que no se identifican como blancos no hispanos. Esto también incluye a los grupos de manzanas censales que experimentan tasas más altas de impactos acumulativos, lo cual se ve representado por los puntajes de EnviroScreen (percentiles) por encima de 80. Esta definición no forma parte de los componentes ni del puntaje de EnviroScreen y no influye en los resultados que se presentan en el mapa, las gráficas o la tabla."
-             )
+              "Este término se refiere a las áreas que cumplen con la definición de comunidad afectada de manera desproporcionada de la Ley de Colorado. La Ley 23-1233 adoptó una definición que se aplica a todas las agencias estatales, incluyendo el CDPHE.  La definición incluye los grupos de manzanas censales en los que más del 40 % de la población es de bajos ingresos (lo que significa que el ingreso promedio del grupo familiar equivale o está por debajo del 200 % del nivel federal de pobreza), el 50 % de los hogares experimentan una sobrecarga por gastos de vivienda (lo que significa que el grupo familiar destina más del 30 % de sus ingresos al pago de la vivienda, como el alquiler o la hipoteca), el 40 % de la población son personas de color (incluyendo a todas las personas que no se identifican como blancos no hispanos) o el 20 % de los hogares experimentan aislamiento lingüístico (lo que significa que todas las personas de 14 años o mayores del grupo familiar tienen dificultad para hablar inglés). Esta definición también incluye a las comunidades de casas móviles, las reservas de los ute de la montaña Ute y ute del sur y todas las áreas que la herramienta de evaluación de justicia climática y económica del gobierno federal considera como desfavorecidas. La definición incluye asimismo a los grupos de manzanas censales que experimentan una tasa más alta de impactos acumulativos, lo cual se ve representado por un puntaje de EnviroScreen (percentil) por encima de 80. Esta definición no forma parte de los componentes ni del puntaje de EnviroScreen y no influye en los resultados que se presentan en el mapa, las gráficas o la tabla. Colorado EnviroScreen muestra tanto las áreas que cumplen con la definición actual de comunidad afectada de manera desproporcionada que se adoptó en mayo de 2023 al promulgarse la Ley HB23-1233, como con la definición anterior (que solo incluía la raza, el ingreso, la sobrecarga por gastos de vivienda y el puntaje de EnviroScreen por encima del percentil 80)." 
+              )
              # ,tags$strong("Comunidad con carbón")
              # ,p(
              #   "Se indican como comunidades con carbón todos las áreas censales y grupos de manzanas censales de los condados que cuentan con una central eléctrica a carbón. Estos datos no forman parte de los componentes ni del puntaje de EnviroScreen y no influyen en los resultados que se presentan en el mapa, las gráficas o la tabla."
@@ -684,13 +648,14 @@ ui <- fluidPage(
              # ,p(
              #   "Se indican como comunidades con petróleo y gas todos las áreas censales y grupos de manzanas censales de los condados que cuentan con operaciones de extracción de petróleo y gas activas. En EnviroScreen también se incluye la proximidad a las operaciones de petróleo y gas como parte del componente de efectos ambientales."
              # )
+
+             ,tags$strong("Herramienta CEJST del gobierno federal (Justice40)")
+             ,p(
+              "En 2021, la Casa Blanca indicó al Consejo de Calidad Ambiental que creara la herramienta de evaluación de justicia climática y económica (CEJST). Esta herramienta identifica a las comunidades que, debido a cargas relacionadas con el cambio climático, la energía, la salud, la contaminación histórica, el transporte, el agua y las aguas residuales y el desarrollo de la fuerza laboral, se consideran como desfavorecidas. Las agencias del gobierno federal usan el mapa de la herramienta CEJST para identificar a las comunidades que se beneficiarían con los programas de la iniciativa Justice40. La meta de la Iniciativa Justice40 es que se destine a las comunidades desfavorecidas el 40 % del total de los beneficios de las inversiones en el clima, la energía limpia y otras áreas relacionadas.  Esta definición no forma parte de los componentes ni del puntaje de EnviroScreen y no influye en los resultados que se presentan en el mapa, las gráficas o la tabla. Las áreas que la herramienta de evaluación de justicia climática y económica del gobierno federal identifica como desfavorecidas también cumplen con la definición de comunidades afectadas de manera desproporcionada de la ley de Colorado."
+              )
              ,tags$strong("Historias en el mapa")
              ,p(
                "Estas historias proporcionan una experiencia de inmersión al combinar texto, mapas interactivos y otro contenido multimedia. Las historias de Colorado EnviroScreen ponen de relieve vivencias que complementan los datos de la herramienta, pero cabe señalar que no forman parte del puntaje de EnviroScreen."
-             )
-             ,tags$strong("Justice40")
-             ,p(
-               "La Casa Blanca lanzó la Iniciativa Justice40 en 2021. La meta de la Iniciativa Justice40 es que se destine el 40 por ciento del total de los beneficios de las inversiones del gobierno federal en siete áreas clave a las comunidades desfavorecidas. Estas siete áreas clave son las siguientes: cambio climático, energía limpia y eficiencia energética, tráfico limpio, vivienda asequible y sostenible, formación y desarrollo de la fuerza laboral, descontaminación y disminución de la contaminación histórica y desarrollo de una infraestructura de importancia clave para evitar la contaminación del agua. De acuerdo con la definición de la Iniciativa Justice40, se considera que una comunidad es “desfavorecida” si uno o más indicadores ambientales o climáticos del área censal se encuentran por encima del umbral y los indicadores socioeconómicos del área censal están por encima del umbral. Esta definición no forma parte de los componentes ni del puntaje de EnviroScreen y no influye en los resultados que se presentan en el mapa, las gráficas o la tabla."
              )
              ,tags$strong("Puntaje de características demográficas")
              ,p(
@@ -730,6 +695,10 @@ ui <- fluidPage(
              ,tags$strong("Puntaje de poblaciones sensibles")
              ,p(
                "El puntaje de poblaciones sensibles expresa el grado de riesgo a las exposiciones ambientales y los impactos climáticos que corre una comunidad en relación con la salud. Por ejemplo, la contaminación del aire tiene un mayor efecto en las personas de más edad y más jóvenes, así como en las personas con afecciones de salud crónicas, como el asma. Este puntaje varía de 0 a 100, siendo que los puntajes más altos son los peores. Para calcular este puntaje, se usan los datos sobre la tasa de hospitalizaciones por asma, prevalencia de cáncer, prevalencia de diabetes, prevalencia de enfermedades cardíacas, expectativa de vida, tasa de bajo peso al nacer, salud mental, población por encima de 65 años y población por debajo de 5 años."
+             )
+             ,tags$strong("Reglamento 3 de la AQCC - Comunidad afectada de manera desproporcionada")
+             ,p(
+               "Este término se refiere a las áreas que están sujetas a los términos del Reglamento 3 de la Comisión de Control de la Calidad del Aire (AQCC), norma que exige que los permisos de las instalaciones que están en comunidades afectadas de manera desproporcionada otorguen un mayor grado de protección a dichas comunidades.  Esto incluye la mayoría de las áreas que cumplen con la definición estatal más amplia de comunidad afectada de manera desproporcionada, pero no incluye las áreas que cumplen con la definición de comunidad desfavorecida de la herramienta de evaluación de justicia climática y económica del gobierno federal, las reservas de los ute de la montaña Ute y ute del sur y los parques de casas móviles."
              )
              # ,tags$strong("Zona urbana/rural")
              # ,p(
@@ -1295,15 +1264,36 @@ server <- function(input, output,session) {
       # addPolyLine(sf1 = coal, group = "Comunidad con carbon",
       #             popup = "<strong>Definition: </strong> Counties that have a coal-burning power plant.") %>%
       addPolygons(
-        data = di,
-        fillColor =  ~diPal(`color`),
+        data = di_2023,
+        fillColor =  ~diPal_2023(`color`),
         color = "#454547",
         weight = 1,
         fillOpacity = 0.8,
-        popup = di$popup,
-        group = "Comunidad afectada de manera desproporcionada",
+        popup = di_2023$popup,
+        group = "Comunidad afectada de manera desproporcionada (mayo de 2023)",
         options = pathOptions(pane = "elements")
       )%>%
+      leaflet::addCircleMarkers(
+        data = di_MHC,
+        label = ~Park.Name,
+        popup = ~popup,
+        fillColor = "goldenrod",
+        fillOpacity = 1,
+        radius = 4,
+        stroke = F,
+        group = "Comunidad afectada de manera desproporcionada: Comunidad de casas móviles",
+        options = pathOptions(pane = "elements")
+      )%>%  
+      addPolygons(
+        data = di_AQCC,
+        fillColor =  ~diPal_AQCC(`color`),
+        color = "#454547",
+        weight = 1,
+        fillOpacity = 0.8,
+        popup = di_AQCC$popup,
+        group = "Reglamento 3 de la AQCC - Comunidad afectada de manera desproporcionada",
+        options = pathOptions(pane = "elements")
+      )%>%    
       addPolygons(
         data = justice40,
         popup = justice40$popup,
@@ -1311,7 +1301,7 @@ server <- function(input, output,session) {
         fillOpacity = 0.8,
         color = "#636363",
         weight = 1,
-        group = "Comunidad de Justice40",
+        group = "Herramienta CEJST del gobierno federal (Justice40)",
         options = pathOptions(pane = "elements")
       )%>%
       addMarkers(
@@ -1325,6 +1315,16 @@ server <- function(input, output,session) {
         options = pathOptions(pane = "elements"),
         icon = sm_Icon
       )%>%
+      addPolygons(
+        data = di,
+        fillColor =  ~diPal(`color`),
+        color = "#454547",
+        weight = 1,
+        fillOpacity = 0.8,
+        popup = di$popup,
+        group = "Comunidad afectada de manera desproporcionada previa (enero de 2023 a mayo de 2023)",
+        options = pathOptions(pane = "elements")
+      )%>%
       # add legend --------------------------------------------------------------
     addLegend(
       "topright",
@@ -1337,12 +1337,37 @@ server <- function(input, output,session) {
       na.label = "No Data"
     ) %>%
       addLegend("topright",
+                colors = c('#332288', '#88CCEE', '#44AA99', '#117733', '#999933', '#DDCC77', '#CC6677', '#882255'), 
+                title = "Comunidad afectada de manera desproporcionada (mayo de 2023)",
+                labels = c("Bajos ingresos", "Personas de color",
+                           "Sobrecarga por gastos de vivienda", "Aislamiento lingüístico",
+                           "Herramienta CEJST del gobierno federal (Justice40)",
+                           "Tierras tribales",
+                           "Puntaje de EnviroScreen", "Más de una categoría"),
+                opacity = .8,
+                group = "Comunidad afectada de manera desproporcionada (mayo de 2023)"
+      )%>%
+      addLegend("topright",
+                colors = "goldenrod",
+                title = "Comunidad afectada de manera desproporcionada: Comunidad de casas móviles",
+                label = "Comunidad de casas móviles",
+                opacity = 1,
+                group = "Comunidad afectada de manera desproporcionada: Comunidad de casas móviles"
+      )%>%
+      addLegend("topright",
+                colors = c("#d95f02", "#1b9e77"), 
+                title = "Reglamento 3 de la AQCC - Comunidad afectada de manera desproporcionada",
+                labels = c("Comunidad vulnerable desde el punto de vista socioeconómico", "Comunidad afectada de manera acumulativa"),
+                opacity = .8,
+                group = "Reglamento 3 de la AQCC - Comunidad afectada de manera desproporcionada"
+      )%>%
+      addLegend("topright",
                 colors = c("#a6cee3", "#33a02c","#b2df8a","#fc8d62", "#1f78b4"),
-                title = "Comunidad afectada de manera desproporcionada",
+                title = "Comunidad afectada de manera desproporcionada previa (enero de 2023 a mayo de 2023)",
                 labels = c("Bajos ingresos", "Personas de color",
                            "Sobrecarga por gastos de vivienda", "Puntaje de EnviroScreen", "Más de una categoría"),
                 opacity = .8,
-                group = "Comunidad afectada de manera desproporcionada"
+                group = "Comunidad afectada de manera desproporcionada previa (enero de 2023 a mayo de 2023)"
       )%>%
       # addLegendImage(images = "www/oilGas.png",
       #                labels = "Comunidad con petróleo y gas",
@@ -1367,9 +1392,9 @@ server <- function(input, output,session) {
       #                labelStyle = "font-size: 16")%>%
       addLegend("topright",
                 colors = "#fb9a99",
-                labels =  "Comunidad de Justice40",
+                labels =  "Herramienta CEJST del gobierno federal (Justice40)",
                 opacity = .8,
-                group = "Comunidad de Justice40"
+                group = "Herramienta CEJST del gobierno federal (Justice40)"
       )%>%
       # add control groups ------------------------------------------------------
     addLayersControl(
@@ -1379,9 +1404,12 @@ server <- function(input, output,session) {
         # "Comunidad con carbon",
         # "Comunidad rural",
         # 'Comunidad con petroleo y gas',
-        "Comunidad afectada de manera desproporcionada",
-        "Comunidad de Justice40",
-        "Historias en el mapa"
+        "Comunidad afectada de manera desproporcionada (mayo de 2023)",
+        "Comunidad afectada de manera desproporcionada: Comunidad de casas móviles",
+        "Reglamento 3 de la AQCC - Comunidad afectada de manera desproporcionada",
+        "Herramienta CEJST del gobierno federal (Justice40)",
+        "Historias en el mapa",
+        "Comunidad afectada de manera desproporcionada previa (enero de 2023 a mayo de 2023)"
       ),
       position = "topleft",
       options = layersControlOptions(collapsed = TRUE))%>%
@@ -1397,9 +1425,12 @@ server <- function(input, output,session) {
           # "Comunidad con carbon",
           # "Comunidad rural",
           # 'Comunidad con petroleo y gas',
-          "Comunidad afectada de manera desproporcionada",
-          "Comunidad de Justice40",
-          "Historias en el mapa"))
+          "Comunidad afectada de manera desproporcionada (mayo de 2023)",
+          "Comunidad afectada de manera desproporcionada: Comunidad de casas móviles",
+          "Reglamento 3 de la AQCC - Comunidad afectada de manera desproporcionada",
+          "Herramienta CEJST del gobierno federal (Justice40)",
+          "Historias en el mapa",
+          "Comunidad afectada de manera desproporcionada previa (enero de 2023 a mayo de 2023)"))
     map
   })
 
@@ -2045,7 +2076,9 @@ server <- function(input, output,session) {
               select(
                 "GEOID",
                 "Nombre del condado",
-                "Comunidad afectada de manera desproporcionada",
+                "Comunidad afectada de manera desproporcionada (mayo de 2023)",
+                "Reglamento 3 de la AQCC - Comunidad afectada de manera desproporcionada",
+                "Comunidad afectada de manera desproporcionada previa (enero de 2023 a mayo de 2023)",
                 "Comunidad de Justice40",
                 # ,"Comunidad con carbón"
                 # ,"Comunidad con petróleo y gas"
@@ -2091,9 +2124,6 @@ server <- function(input, output,session) {
         },
         content = function(file) {
           write.csv(df1() %>% sf::st_drop_geometry() %>% select(-"visParam"
-                                                                ,-"Comunidad con carbón"
-                                                                ,-"Comunidad con petróleo y gas"
-                                                                ,-"Comunidad rural"
                                                                 ), file, row.names = FALSE)    }
       )
       # Downloadable csv of data description ----
@@ -2152,10 +2182,7 @@ server <- function(input, output,session) {
                         `Nombre del condado`,
                         indicator1,
                         indicator2,
-                        `Comunidad con carbón`
-                        ,`Comunidad con petróleo y gas`
-                        ,`Comunidad rural`
-                        ,visParam)
+                        visParam)
 
         ed2 <- ed2 %>%
           dplyr::mutate(
