@@ -1,5 +1,5 @@
 #' generate di community 
-#' @description : produces a sf object of disporpotionally impacted communities
+#' @description : produces a sf object of disproportionately impacted communities
 #'
 #' @return : sf object 
 #' @export
@@ -41,13 +41,13 @@ getDI_AQCC <- function(){
                "<br/>",
                "<br/><b>Vulnerabilidades socioeconómicas:</b>",
                "<br/>",
-               "<br/><b>Más del 40 % de las viviendas son de bajos ingresos: </b>", FLP_FLA,
+               "<br/><b>Más del 40 % de los hogares son de bajos ingresos: </b>", FLP_FLA,
                "<br/><b>Porcentaje de bajos ingresos: </b>", round(Pov_PCT*100, digits = 1),
                "<br/>",
-               "<br/><b>Más del 40 % de las viviendas están integradas por personas de color : </b>", Mn_FLAG,
+               "<br/><b>Más del 40 % de los hogares están integrados por personas de color : </b>", Mn_FLAG,
                "<br/><b>Porcentaje de personas de color: </b>", round(Min_PCT*100, digits = 1),
                "<br/>",
-               "<br/><b>Más del 50 % de las viviendas experimentan sobrecarga por gastos de vivienda : </b>", Br_FLAG,
+               "<br/><b>Más del 50 % de los hogares experimentan sobrecarga por gastos de vivienda : </b>", Br_FLAG,
                "<br/><b>Porcentaje con sobrecarga por gastos de vivienda: </b>", round(HH_Burdened_Pct*100, digits = 1),
                "<br/>",
                "<br/><b>Más del 20 % de la población está aislada desde el punto de vista lingüístico: </b>", Ling_FLAG,
